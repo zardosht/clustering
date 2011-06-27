@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.naming.spi.DirStateFactory.Result;
 
+import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
 public abstract class AbstractClassifier {
@@ -19,27 +20,17 @@ public abstract class AbstractClassifier {
 
 	
 	
-	public List<List<Item>> createClusters(){
-		List<List<Item>> result = new ArrayList<List<Item>>();
+	public List<Cluster> createClusters(){
 		List<Item> centroids = chooseCentroids();
-		return createClusters(centroids);
+		return createClusters(centroids, new ArrayList<Cluster>);
 	}
 	
-	public List<List<Item>> createClusters(List<Item> centroids){
-		List<List<Item>> result = new ArrayList<List<Item>>();
-		if(isCentroidsChanging()){
+	public List<Cluster> createClusters(List<Item> centroids, List<Cluster> result){
+		if(isCentroidsChanging(result)){
+			return result;
+		}else{
 			
 		}
-		List<Item> centroids = chooseCentroids();
-		do{
-			
-			createClusters(centroids);
-			
-		}while();
-		
-		
-		
-		return result;
 	}
 	
 	
@@ -51,7 +42,7 @@ public abstract class AbstractClassifier {
 	protected abstract List<Item> chooseCentroids();
 
 
-	protected abstract boolean isCentroidsChanging();
+	protected abstract boolean isCentroidsChanging(List<Cluster> result);
 
 
 
