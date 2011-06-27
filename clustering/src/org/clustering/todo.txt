@@ -1,0 +1,22 @@
+Alg:
+====
+Wahl K;
+Auswahl von K Elementen als initiale Centroide;
+<repeat>{
+Bilde K Cluster durch Zuweisen aller Element zum Centroid mit der geringsten Entfernung;
+Berechne die Centroide aller Cluster neu;
+}<until> Centroide ändern sich nicht mehr;
+
+===============================================================
+
+• FilmID – Keyword-Tabelle wird bereitgestellt
+	– Ergebnis von Block 2
+• Ziel: Finde ähnliche Filme zu einem gegebenen Film mit KMeans Clustering
+• Wesentliche Entscheidungen bei Implementierung K-Means
+	– Wahl K
+	– Repräsentation Centroid, z.B. Schlüsselwörter eines Filmes oder Obermenge aller Schlüsselwörter eines Clusters
+	– Wahl der initialen Centroide, z.B. zufällig (oder Heuristik möglich?)
+• Analyse des Clusterings anhand Zahl der Filme in Cluster für mind. drei Werte von K
+	– Was ist das beste K?
+	
+===============================================================
