@@ -24,6 +24,7 @@ public class Cluster {
 
 
 	private void removeItem(Item item) {
+		item.setCluster(null);
 		this.members.remove(item);
 	}
 
