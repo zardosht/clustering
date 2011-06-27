@@ -17,7 +17,8 @@ public class Item {
 	}
 
 	public double getDistance(Item item) {
-		return distances.get(item);
+		Double dist = distances.get(item);
+		return dist;
 	}
 
 	public void addKeyword(String keyword) {

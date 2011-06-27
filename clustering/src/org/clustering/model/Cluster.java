@@ -1,5 +1,6 @@
 package org.clustering.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cluster {
@@ -9,6 +10,8 @@ public class Cluster {
 
 	public Cluster(Item initialCentoroid) {
 		this.centroid = initialCentoroid;
+		members = new ArrayList<Item>();
+		members.add(centroid);
 	}
 
 	public Item getCentroid() {
@@ -20,8 +23,23 @@ public class Cluster {
 	}
 
 	public void computeNewCnetroid() {
-		// Item newCentroid;
-		// this.centorid = newCentroid;
+		double[] distances = new double[members.size()];
+		for(int i =0; i < members.size(); i++) {
+			for(int j = i+1; j<members.size(); j++) {
+				double distance = members.get(i).getDistance(members.get(j));
+				distances[i]+=distance;
+				distances[j]+=distance;
+			}
+		}
+		int lastIndex = 0;
+		double smallestDistance = Double.MAX_VALUE;		
+		for(int i = 0; i < distances.length; i++) {
+			if(distances[i] < smallestDistance) {
+				smallestDistance = distances[i];
+				lastIndex = i;
+			}
+		}
+		centroid = members.get(lastIndex);
 	}
 
 	public void removeItem(Item item) {

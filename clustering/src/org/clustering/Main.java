@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.clustering.classifier.Classifier;
+import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
 public class Main {
@@ -22,7 +24,6 @@ public class Main {
 
 		List<Item> items = new ArrayList<Item>(1700);
 		Set<String> allKeywords = new HashSet<String>();
-		
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
@@ -49,6 +50,9 @@ public class Main {
 			}
 		}
 
+		Classifier classifier = new Classifier(2, items);
+		List<Cluster> clusters = classifier.createClusters();
+		System.out.println(clusters.toString());
 		System.out.println(items.get(0).toString());
 	}
 

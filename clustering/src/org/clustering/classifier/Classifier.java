@@ -54,20 +54,26 @@ public class Classifier {
 			for (Item item : items) {
 				double lastDist = Double.MAX_VALUE;
 				int newClusterIndex = 0;
-				int oldClusterIndex = 0;
-				for (int clusterIndex = 0; clusterIndex < clusters.size();clusterIndex++) {
+				int oldClusterIndex = -1;
+				for (int clusterIndex = 0; clusterIndex < clusters.size(); clusterIndex++) {
 					Cluster cluster = clusters.get(clusterIndex);
-					if(cluster.contains(item)){
+					if (cluster.contains(item)) {
 						oldClusterIndex = clusterIndex;
 					}
-					double newDist = item.getDistance(cluster.getCentroid());
+					Item centroid = cluster.getCentroid();
+					if (item == centroid) {
+						continue;
+					}
+					double newDist = item.getDistance(centroid);
 					if (newDist < lastDist) {
 						lastDist = newDist;
 						newClusterIndex = clusterIndex;
 					}
 				}
-				if(oldClusterIndex!=newClusterIndex) {
-					clusters.get(oldClusterIndex).removeItem(item);
+				if (oldClusterIndex != newClusterIndex) {
+					if(oldClusterIndex != -1){
+						clusters.get(oldClusterIndex).removeItem(item);
+					}
 					clusters.get(newClusterIndex).addItem(item);
 				}
 			}
