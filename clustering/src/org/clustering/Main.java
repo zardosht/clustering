@@ -50,10 +50,6 @@ public class Main {
 		}
 
 		System.out.println(items.get(0).toString());
-		
-		System.out
-				.println("It looks like the EGit developers are not responsible developers "
-						+ "and still need to learn alot!");
 	}
 
 }
