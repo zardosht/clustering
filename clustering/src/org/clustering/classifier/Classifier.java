@@ -9,14 +9,14 @@ import java.util.Set;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
-public abstract class AbstractClassifier {
+public class Classifier {
 
 	private final int numOfClusters;
 	private final List<Item> items;
 	private Set<Item> oldCentroids;
 	private Random random = new Random();
 
-	public AbstractClassifier(int numOfClusters, List<Item> items) {
+	public Classifier(int numOfClusters, List<Item> items) {
 		this.numOfClusters = numOfClusters;
 		this.items = items;
 	}
