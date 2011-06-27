@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 public class Item {
 	
-	private Cluster cluster; 
 
 	private final int itemNumber;
 	private HashSet<String> keywords;
@@ -48,11 +47,4 @@ public class Item {
 		return "Item "+itemNumber+" keywords: "+keywords.size();
 	}
 
-	public Cluster getCluster() {
-		return cluster;
-	}
-
-	public void setCluster(Cluster cluster) {
-		this.cluster = cluster;
-	}
 }

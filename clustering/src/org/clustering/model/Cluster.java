@@ -17,15 +17,7 @@ public class Cluster {
 	}
 
 	public void addItem(Item item) {
-		item.setCluster(this);
-		item.getCluster().removeItem(item);
 		this.members.add(item);
-	}
-
-
-	private void removeItem(Item item) {
-		item.setCluster(null);
-		this.members.remove(item);
 	}
 
 
