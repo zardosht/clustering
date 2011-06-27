@@ -30,7 +30,6 @@ public abstract class AbstractClassifier {
 	}
 
 
-
 	public List<Cluster> createClusters(List<Item> centroids, List<Cluster> result){
 		if(isCentroidsChanging(centroids)){
 			return result;
