@@ -21,12 +21,18 @@ public abstract class AbstractClassifier {
 	
 	
 	public List<Cluster> createClusters(){
-		List<Item> centroids = chooseCentroids();
-		return createClusters(centroids, new ArrayList<Cluster>);
+		List<Item> centroids = chooseInitialCentroids();
+		return createClusters(centroids, new ArrayList<Cluster>());
 	}
 	
+	private List<Item> chooseInitialCentroids() {
+		return new ArrayList<Item>(numOfClusters);
+	}
+
+
+
 	public List<Cluster> createClusters(List<Item> centroids, List<Cluster> result){
-		if(isCentroidsChanging(result)){
+		if(isCentroidsChanging(centroids)){
 			return result;
 		}else{
 			
@@ -42,7 +48,7 @@ public abstract class AbstractClassifier {
 	protected abstract List<Item> chooseCentroids();
 
 
-	protected abstract boolean isCentroidsChanging(List<Cluster> result);
+	protected abstract boolean isCentroidsChanging(List<Item> centroids);
 
 
 
