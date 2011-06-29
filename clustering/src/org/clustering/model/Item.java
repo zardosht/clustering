@@ -26,7 +26,7 @@ public class Item {
 	}
 
 	public void calcDistance(Item item, int numKeywords) {
-		int mutualKeywords = 0;
+		double mutualKeywords = 0;
 		for(String keyword : getKeywords()) {
 			if(item.getKeywords().contains(keyword)) mutualKeywords++;
 		}
