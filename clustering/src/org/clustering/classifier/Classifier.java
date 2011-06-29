@@ -13,11 +13,9 @@ public class Classifier {
 
 	private final int numOfClusters;
 	private final List<Item> items;
-	private Set<Item> oldCentroids;
 	private Random random = new Random();
 
 	public Classifier(int numOfClusters, List<Item> items) {
-		oldCentroids = new HashSet<Item>();
 		this.numOfClusters = numOfClusters;
 		this.items = items;
 	}
@@ -92,13 +90,12 @@ public class Classifier {
 	}
 
 	private boolean centroidsChanged(List<Cluster> clusters) {
-		Set<Item> newCentroids = new HashSet<Item>();
 		for (Cluster cluster : clusters) {
-			newCentroids.add(cluster.getCentroid());
+			if(cluster.centroidChanged()) {
+				return true;
+			}
 		}
-		boolean result = !oldCentroids.equals(newCentroids);
-		oldCentroids = newCentroids;
-		return result;
+		return false;
 	}
 
 	public int getNumOfClusters() {
