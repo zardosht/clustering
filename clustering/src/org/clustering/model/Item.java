@@ -30,7 +30,8 @@ public class Item {
 		for(String keyword : getKeywords()) {
 			if(item.getKeywords().contains(keyword)) mutualKeywords++;
 		}
-		double distance = mutualKeywords/numKeywords;
+		double similarity = mutualKeywords/numKeywords;
+		double distance = 1/similarity;
 		setDistance(item, distance);
 		item.setDistance(this, distance);
 	}

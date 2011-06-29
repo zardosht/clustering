@@ -24,6 +24,10 @@ public class Cluster {
 		this.members.add(item);
 	}
 
+	public List<Item> getMembers() {
+		return members;
+	}
+
 	public void computeNewCnetroid() {
 		double[] distances = new double[members.size()];
 		for (int i = 0; i < members.size(); i++) {
