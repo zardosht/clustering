@@ -22,11 +22,6 @@ public class Classifier {
 		this.items = items;
 	}
 
-	public List<Cluster> createClusters() {
-		List<Cluster> initialClusters = createInitialClusters();
-		return createClusters(initialClusters);
-	}
-
 	private List<Cluster> createInitialClusters() {
 		List<Cluster> initialClusters = new ArrayList<Cluster>();
 		Set<Item> initialCentroids = selectInitialCentroids();
@@ -47,40 +42,52 @@ public class Classifier {
 		return initialCentroids;
 	}
 
-	private List<Cluster> createClusters(List<Cluster> clusters) {
-		if (!centroidsChanged(clusters)) {
-			return clusters;
-		} else {
+	public List<Cluster> createClusters() {
+		List<Cluster> clusters = createInitialClusters();
+		do {
 			for (Item item : items) {
-				double lastDist = Double.MAX_VALUE;
-				int newClusterIndex = 0;
-				int oldClusterIndex = -1;
-				for (int clusterIndex = 0; clusterIndex < clusters.size(); clusterIndex++) {
-					Cluster cluster = clusters.get(clusterIndex);
-					if (cluster.contains(item)) {
-						oldClusterIndex = clusterIndex;
-					}
-					Item centroid = cluster.getCentroid();
-					if (item == centroid) {
-						continue;
-					}
-					double newDist = item.getDistance(centroid);
-					if (newDist < lastDist) {
-						lastDist = newDist;
-						newClusterIndex = clusterIndex;
-					}
+				Cluster oldCluster = findCurrentCluster(item, clusters);
+				Cluster newCluster = findNewCluster(item, clusters);
+				if (oldCluster != null){
+					oldCluster.removeItem(item);
 				}
-				if (oldClusterIndex != newClusterIndex) {
-					if(oldClusterIndex != -1){
-						clusters.get(oldClusterIndex).removeItem(item);
-					}
-					clusters.get(newClusterIndex).addItem(item);
-				}
+				newCluster.addItem(item);
 			}
-			for (Cluster cluster : clusters) {
-				cluster.computeNewCnetroid();
+			computeNewCentroids(clusters);
+		} while (centroidsChanged(clusters));
+		return clusters;
+	}
+
+	private Cluster findNewCluster(Item item, List<Cluster> clusters) {
+		double lastDist = Double.MAX_VALUE;
+		Cluster newCluster = null;
+		for (Cluster cluster : clusters) {
+			Item centroid = cluster.getCentroid();
+			//the distance of an item to itself is 0.0; this breaks the algorithm. Therefore filter the centroid itself.
+			if (item == centroid) {
+				return cluster;
 			}
-			return createClusters(clusters);
+			double newDist = item.getDistance(centroid);
+			if (newDist < lastDist) {
+				lastDist = newDist;
+				newCluster = cluster;
+			}
+		}
+		return newCluster;
+	}
+
+	private Cluster findCurrentCluster(Item item, List<Cluster> clusters) {
+		for (Cluster cluster : clusters) {
+			if (cluster.contains(item)) {
+				return cluster;
+			}
+		}
+		return null;
+	}
+
+	private void computeNewCentroids(List<Cluster> clusters) {
+		for (Cluster cluster : clusters) {
+			cluster.computeNewCnetroid();
 		}
 	}
 

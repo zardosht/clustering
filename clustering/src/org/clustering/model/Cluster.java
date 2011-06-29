@@ -6,10 +6,12 @@ import java.util.List;
 public class Cluster {
 
 	private Item centroid;
+	private boolean centroidChanged;
 	private List<Item> members;
 
 	public Cluster(Item initialCentoroid) {
 		this.centroid = initialCentoroid;
+		this.centroidChanged = true;
 		members = new ArrayList<Item>();
 		members.add(centroid);
 	}
@@ -39,7 +41,11 @@ public class Cluster {
 				lastIndex = i;
 			}
 		}
-		centroid = members.get(lastIndex);
+		Item newCentroid = members.get(lastIndex);
+		if(newCentroid != centroid){
+			centroidChanged = true;
+		}
+		centroid = newCentroid;
 	}
 
 	public void removeItem(Item item) {
@@ -48,6 +54,10 @@ public class Cluster {
 
 	public boolean contains(Item item) {
 		return members.contains(item);
+	}
+	
+	public boolean centroidChanged(){
+		return centroidChanged;
 	}
 
 }
