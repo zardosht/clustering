@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +23,16 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-
-		int kCluster = 2;
-		boolean test = true;
+		System.out.println("Start: "+new Date());
+		
+		int kCluster = 100;
+		boolean test = false;
 		
 		List<Item> items = new ArrayList<Item>(1700);
 		Set<String> allKeywords = new HashSet<String>();
 		
 		if(test) {
+			kCluster=2;
 			createTestInput(items,allKeywords);
 		} else {
 			readInput("data/keywords.txt", items, allKeywords);
@@ -46,10 +50,37 @@ public class Main {
 		Classifier classifier = new Classifier(kCluster, items);
 		List<Cluster> clusters = classifier.createClusters();
 		if(test) validateClustes(clusters, items);
+		System.out.println("End: "+new Date());
+		
+		
+		for(Cluster cluster : clusters) {
+			HashSet<String> keywords = new HashSet<String>();
+			for(Item item : cluster.getMembers()) {
+				keywords.addAll(item.getKeywords());
+			}
+			new ArrayList<Keyword>();
+			for(String keyword : keywords) {
+				int counter = 0;
+				for(Item item : cluster.getMembers()) {
+					if(item.getKeywords().contains(keyword)) counter++;
+				}
+				numOfkeyword.put(keyword, counter);
+			}
+		}
 	}
 
+	private class Keyword {
+		private final String keyword;
+		private final int count;
+
+		public Keyword(String keyword, int count) {
+			this.keyword = keyword;
+			this.count = count;
+		}
+	}
+	
 	private static void validateDistances(List<Item> items) {
-		test(items.get(0).getDistance(items.get(1)) == 5.0/2.0);
+		test(items.get(0).getDistance(items.get(1)) == 1-(2.0/5.0));
 	}
 	
 	private static void test(boolean b) {

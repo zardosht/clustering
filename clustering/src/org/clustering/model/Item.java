@@ -31,7 +31,8 @@ public class Item {
 			if(item.getKeywords().contains(keyword)) mutualKeywords++;
 		}
 		double similarity = mutualKeywords/numKeywords;
-		double distance = 1/similarity;
+//		double distance = 1/similarity;
+		double distance = 1-similarity;
 		setDistance(item, distance);
 		item.setDistance(this, distance);
 	}
@@ -40,7 +41,7 @@ public class Item {
 		distances.put(item, distance);
 	}
 
-	private HashSet<String> getKeywords() {
+	public HashSet<String> getKeywords() {
 		return keywords;
 	}
 	
