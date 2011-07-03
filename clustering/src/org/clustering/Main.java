@@ -1,12 +1,6 @@
 package org.clustering;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,13 +21,13 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		boolean printEvaluation = true;
-		int kCluster = 10;
-		
-//		int filmId = getInputFilmId(args);
-//		if(filmId == -1) {
-//			System.out.println("Film Id invalid. Please give a file Id between 1 and 1682");
-//			return;
-//		}
+		int kCluster = 100;
+
+		// int filmId = getInputFilmId(args);
+		// if(filmId == -1) {
+		// System.out.println("Film Id invalid. Please give a file Id between 1 and 1682");
+		// return;
+		// }
 
 		System.out.println("Start reading data: " + new Date());
 		FileUtil fileUtil = new FileUtil();
@@ -59,11 +53,11 @@ public class Main {
 		if(printEvaluation){
 			Evaluator evaluator = new Evaluator();
 			printTopTenKeywordsPerCluster(evaluator, clusters);
-			printEvaluationData(evaluator,clusters);
+			System.out.println();
+			printEvaluationData(evaluator, clusters);
 		}
 
 	}
-
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId, List<Item> items) {
 		Item film = findItemById(filmId, items);
@@ -71,20 +65,22 @@ public class Main {
 			throw new IllegalStateException("Could not find the film with given id: " + filmId);
 		}
 		Cluster filmCluster = null;
-		for(Cluster cluster : clusters){
-			if(cluster.contains(film)){
+		for (Cluster cluster : clusters) {
+			if (cluster.contains(film)) {
 				filmCluster = cluster;
 				break;
 			}
 		}
-		if(filmCluster == null){
-			throw new IllegalStateException("The given film is not contained in any cluster. Id: " + filmId);
+		if (filmCluster == null) {
+			throw new IllegalStateException(
+					"The given film is not contained in any cluster. Id: "
+							+ filmId);
 		}
-		for(Item item : filmCluster.getMembers()){
+		for (Item item : filmCluster.getMembers()) {
 			System.out.print(item.toString());
 			System.out.println(item.getKeywords());
 		}
-		
+
 	}
 
 	private static Item findItemById(int filmId, List<Item> items) {
@@ -97,17 +93,17 @@ public class Main {
 	}
 
 	private static int getInputFilmId(String[] args) {
-		if(args.length > 1){
+		if (args.length > 1) {
 			return -1;
 		}
 		int filmId = -1;
-		try{
+		try {
 			filmId = Integer.valueOf(args[0]);
-			
-		}catch (NumberFormatException e) {
+
+		} catch (NumberFormatException e) {
 			filmId = -1;
 		}
-		if(filmId < 1 && filmId > 1682){
+		if (filmId < 1 && filmId > 1682) {
 			return -1;
 		}
 		return filmId;
@@ -115,23 +111,31 @@ public class Main {
 
 	private static void printEvaluationData(Evaluator evaluator,
 			List<Cluster> clusters) {
-			Map<Cluster, Double> mae = evaluator.getMeanAbsoluteError(clusters);
-			Map<Cluster, Double> mse = evaluator.getMeanSquaredError(clusters);
-			double avg = evaluator.getAvgItemPerCluster(clusters);
-			int min = evaluator.getMinItemPerCluster(clusters);
-			int max = evaluator.getMaxItemPerCluster(clusters);
-		System.out.println("Avg per Cluster: "+avg+" Min: "+min+" Max: "+max);
-		for(Cluster cluster : clusters) {
-			System.out.println("Cluster "+cluster.getId()+" [MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
+
+		Map<Cluster, Double> mae = evaluator.getMeanAbsoluteError(clusters);
+		Map<Cluster, Double> mse = evaluator.getMeanSquaredError(clusters);
+		double avg = evaluator.getAvgItemPerCluster(clusters);
+		int min = evaluator.getMinItemPerCluster(clusters);
+		int max = evaluator.getMaxItemPerCluster(clusters);
+		int numClustersWithOneElement = evaluator
+				.getNumClustersWithOneElements(clusters);
+		System.out
+				.println(String
+						.format("Avg per Cluster: %.2f ; Min: %d; Max: %d; NumClustersWithOneElement: %d",
+								avg, min, max, numClustersWithOneElement));
+		System.out.println();
+		for (Cluster cluster : clusters) {
+			System.out.println("Cluster " + cluster.getId() + "[ MAE: "
+					+ mae.get(cluster) + " MSE: " + mse.get(cluster) + " ]");
 		}
-		
+
 	}
-	
+
 	private static void printTopTenKeywordsPerCluster(Evaluator evaluator,
 			List<Cluster> clusters) {
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
 				.getTopTenKeywordsPerCluster(clusters);
-	
+
 		for (Cluster cluster : topTenKeywordsPerCluster.keySet()) {
 			List<KeywordCount> topTenKeywordsInCluster = topTenKeywordsPerCluster
 					.get(cluster);
@@ -140,7 +144,9 @@ public class Main {
 				sbTopTenKeywords.append(kc.toString());
 				sbTopTenKeywords.append("; ");
 			}
-			System.out.printf("%s: [%s] \n", cluster.toString(), sbTopTenKeywords.toString());
+			System.out.printf("%s: [%s] \n", cluster.toString(),
+					sbTopTenKeywords.toString());
 		}
 	}
+
 }
