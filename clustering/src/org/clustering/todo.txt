@@ -1,5 +1,12 @@
-move code for input to DataUtil class
-move code for distance calculation to a Util class
+
+* do for both Cluster impl. 
+1. for k = 2 bis 200 step 2, schreib csv
+2. graph : k ---> errors, #einElementig, max
+3. from 2 => 3 Ks
+
+* nice to do: 
+
+
 
 ****************************************************************
 Alg:

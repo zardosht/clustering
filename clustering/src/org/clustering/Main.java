@@ -16,6 +16,7 @@ import org.clustering.data.CSVWriter;
 import org.clustering.data.FileUtil;
 import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
+import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 import org.clustering.model.ItemUtil;
@@ -28,20 +29,22 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		boolean production = false;
+		boolean avgDist = true;
 
 		if (production) {
-			production(args);
+			production(args, avgDist);
 		}else{
 			CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"), Arrays.asList("kCluster",
 					"avgMae", "avgMse", "min", "max", "numClustersWithOneElement"));
-			evaluateKs(csvWriter);
+			evaluateKs(csvWriter, avgDist);
 			csvWriter.close();
 		}
 
 	}
 
-	private static void evaluateKs(CSVWriter csvWriter)
+	private static void evaluateKs(CSVWriter csvWriter, boolean avgDist)
 			throws FileNotFoundException, IOException {
+		
 		System.out.println("Start reading data: " + new Date());
 		FileUtil fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
@@ -55,10 +58,10 @@ public class Main {
 		calcDistances(items, nonUniqueKeywords);
 		System.out.println("End reading data: " + new Date());
 		Evaluator evaluator = new Evaluator();
-		for (int kCluster = 10; kCluster < 1000; kCluster += 50) {
+		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
 					+ new Date());
-			Classifier classifier = new Classifier(kCluster, items);
+			Classifier classifier = new Classifier(kCluster, items, avgDist);
 			List<Cluster> clusters = classifier.createClusters();
 			writeCsvRecord(kCluster, clusters, evaluator, csvWriter);
 			System.out.println("End Clustering: " + new Date());
@@ -104,7 +107,7 @@ public class Main {
 		}
 	}
 
-	private static void production(String[] args) throws FileNotFoundException,
+	private static void production(String[] args, boolean avgDist) throws FileNotFoundException,
 			IOException {
 		boolean printEvaluation = true;
 		int kCluster = 100;
@@ -132,7 +135,7 @@ public class Main {
 		System.out.println("End reading data: " + new Date());
 
 		System.out.println("Start Clustering: " + new Date());
-		Classifier classifier = new Classifier(kCluster, items);
+		Classifier classifier = new Classifier(kCluster, items, avgDist);
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 
