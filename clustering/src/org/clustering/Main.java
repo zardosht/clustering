@@ -19,18 +19,27 @@ import org.clustering.model.Item;
 
 public class Main {
 
+	private static List<Item> items;
+	private static Set<String> allKeywords;
+
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		System.out.println("Start: " + new Date());
-
+		boolean printEvaluation = false;
 		int kCluster = 10;
+		
+		int filmId = getInputFilmId(args);
+		if(filmId == -1) {
+			System.out.println("Film Id invalid. Please give a file Id between 1 and 1682");
+			return;
+		}
 
-		List<Item> items = new ArrayList<Item>(1700);
-		Set<String> allKeywords = new HashSet<String>();
-		readInput("data/keywords.txt", items, allKeywords);
+		System.out.println("Start reading data: " + new Date());
+		items = new ArrayList<Item>(1700);
+		allKeywords = new HashSet<String>();
+		readInput("data/keywords.txt");
 
 		int numKeywords = allKeywords.size();
 		for (int i = 0; i < items.size(); i++) {
@@ -38,13 +47,68 @@ public class Main {
 				items.get(i).calcDistance(items.get(j), numKeywords);
 			}
 		}
+		System.out.println("End reading data: " + new Date());
 
+		System.out.println("Start Clustering: " + new Date());
 		Classifier classifier = new Classifier(kCluster, items);
 		List<Cluster> clusters = classifier.createClusters();
-		Evaluator evaluator = new Evaluator();
-		printTopTenKeywordsPerCluster(evaluator, clusters);
-		System.out.println("End: " + new Date());
+		System.out.println("End Clustering: " + new Date());
+	
+		printSimilarFilms(clusters, filmId);
+		
+		if(printEvaluation){
+			Evaluator evaluator = new Evaluator();
+			printTopTenKeywordsPerCluster(evaluator, clusters);
+		}
 
+	}
+
+	private static void printSimilarFilms(List<Cluster> clusters, int filmId) {
+		Item film = findItemById(filmId);
+		if(film == null){
+			throw new IllegalStateException("Could not find the film with given id: " + filmId);
+		}
+		Cluster filmCluster = null;
+		for(Cluster cluster : clusters){
+			if(cluster.contains(film)){
+				filmCluster = cluster;
+				break;
+			}
+		}
+		if(filmCluster == null){
+			throw new IllegalStateException("The given film is not contained in any cluster. Id: " + filmId);
+		}
+		for(Item item : filmCluster.getMembers()){
+			System.out.print(item.toString());
+			System.out.println(item.getKeywords());
+		}
+		
+	}
+
+	private static Item findItemById(int filmId) {
+		for(Item item : items){
+			if(item.getItemNumber() == filmId){
+				return item;
+			}
+		}
+		return null;
+	}
+
+	private static int getInputFilmId(String[] args) {
+		if(args.length > 1){
+			return -1;
+		}
+		int filmId = -1;
+		try{
+			filmId = Integer.valueOf(args[0]);
+			
+		}catch (NumberFormatException e) {
+			filmId = -1;
+		}
+		if(filmId < 1 && filmId > 1682){
+			return -1;
+		}
+		return filmId;
 	}
 
 	private static void printTopTenKeywordsPerCluster(Evaluator evaluator,
@@ -64,8 +128,7 @@ public class Main {
 		}
 	}
 
-	private static void readInput(String file, List<Item> items,
-			Set<String> allKeywords) throws FileNotFoundException, IOException {
+	private static void readInput(String file) throws FileNotFoundException, IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
 		while ((line = reader.readLine()) != null) {

@@ -7,6 +7,8 @@ public class Item {
 	
 
 	private final int itemNumber;
+	
+
 	private HashSet<String> keywords;
 	private HashMap<Item, Double> distances;
 
@@ -44,6 +46,11 @@ public class Item {
 	public HashSet<String> getKeywords() {
 		return keywords;
 	}
+
+	public int getItemNumber() {
+		return itemNumber;
+	}
+	
 	
 	@Override
 	public String toString() {
