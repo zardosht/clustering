@@ -122,7 +122,7 @@ public class Main {
 			int max = evaluator.getMaxItemPerCluster(clusters);
 		System.out.println("Avg per Cluster: "+avg+" Min: "+min+" Max: "+max);
 		for(Cluster cluster : clusters) {
-			System.out.println("Cluster "+cluster.getId()+"[ MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
+			System.out.println("Cluster "+cluster.getId()+" [MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
 		}
 		
 	}
