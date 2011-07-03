@@ -50,5 +50,65 @@ public class Evaluator {
 		return result;
 	}
 	
+	public int getMaxItemPerCluster(List<Cluster> clusters) {
+		int max = -1;
+		for(Cluster cluster : clusters) {
+			int size = cluster.getMembers().size();
+			if(size>max) {
+				max = size;
+			}
+		}
+		return max;
+	}
+
+	public int getMinItemPerCluster(List<Cluster> clusters) {
+		int min = -1;
+		for(Cluster cluster : clusters) {
+			int size = cluster.getMembers().size();
+			if(size<min || min == -1) {
+				min = size;
+			}
+		}
+		return min;
+	}
+
+	public double getAvgItemPerCluster(List<Cluster> clusters) {
+		double sum = 0;
+		double count = 0;
+		for(Cluster cluster : clusters) {
+			sum += cluster.getMembers().size();
+			count++;
+		}
+		return sum/count;
+	}
+	
+	public Map<Cluster,Double> getMeanAbsoluteError(List<Cluster> clusters) {
+		return getError(clusters,false);
+	}
+	
+	public Map<Cluster,Double> getMeanSquaredError(List<Cluster> clusters) {
+		return getError(clusters,true);
+	}
+
+	private HashMap<Cluster, Double> getError(List<Cluster> clusters, boolean square) {
+		HashMap<Cluster, Double> result = new HashMap<Cluster, Double>();
+
+		for(Cluster cluster : clusters) {
+			Item centroid = cluster.getCentroid();
+			double mae = 0.0;
+			int counter = 0;
+			for(Item item : cluster.getMembers()) {
+				if(item!=centroid) {
+					double distance = item.getDistance(centroid);
+					mae += (square)?Math.pow(distance,2):distance;
+					counter++;
+				}
+			}
+			double err = mae/(double) counter;
+			result.put(cluster, err);
+		}
+		return result;
+	}
+	
 	
 }
