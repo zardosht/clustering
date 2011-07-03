@@ -99,6 +99,10 @@ public class Evaluator {
 		HashMap<Cluster, Double> result = new HashMap<Cluster, Double>();
 
 		for (Cluster cluster : clusters) {
+			if(cluster.getMembers().size() == 1){
+				result.put(cluster, 0.0);
+				continue;
+			}
 			Item centroid = cluster.getCentroid();
 			double e = 0.0;
 			int counter = 0;
