@@ -26,7 +26,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		System.out.println("Start: " + new Date());
 
-		int kCluster = 100;
+		int kCluster = 10;
 
 		List<Item> items = new ArrayList<Item>(1700);
 		Set<String> allKeywords = new HashSet<String>();
