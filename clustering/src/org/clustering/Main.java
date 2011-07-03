@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.clustering.classifier.Classifier;
+import org.clustering.data.FileUtil;
 import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
@@ -19,8 +20,6 @@ import org.clustering.model.Item;
 
 public class Main {
 
-	private static List<Item> items;
-	private static Set<String> allKeywords;
 
 	/**
 	 * @param args
@@ -37,10 +36,11 @@ public class Main {
 //		}
 
 		System.out.println("Start reading data: " + new Date());
-		items = new ArrayList<Item>(1700);
-		allKeywords = new HashSet<String>();
-		readInput("data/keywords.txt");
-
+		FileUtil fileUtil = new FileUtil();
+		fileUtil.readInput("data/keywords.txt");
+		List<Item> items = fileUtil.getItems();
+		Set<String> allKeywords = fileUtil.getAllKeywords();
+		
 		int numKeywords = allKeywords.size();
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
@@ -54,7 +54,7 @@ public class Main {
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 	
-//		printSimilarFilms(clusters, filmId);
+//		printSimilarFilms(clusters, filmId, items);
 		
 		if(printEvaluation){
 			Evaluator evaluator = new Evaluator();
@@ -65,8 +65,8 @@ public class Main {
 	}
 
 
-	private static void printSimilarFilms(List<Cluster> clusters, int filmId) {
-		Item film = findItemById(filmId);
+	private static void printSimilarFilms(List<Cluster> clusters, int filmId, List<Item> items) {
+		Item film = findItemById(filmId, items);
 		if(film == null){
 			throw new IllegalStateException("Could not find the film with given id: " + filmId);
 		}
@@ -87,7 +87,7 @@ public class Main {
 		
 	}
 
-	private static Item findItemById(int filmId) {
+	private static Item findItemById(int filmId, List<Item> items) {
 		for(Item item : items){
 			if(item.getItemNumber() == filmId){
 				return item;
@@ -143,27 +143,4 @@ public class Main {
 			System.out.printf("%s: [%s] \n", cluster.toString(), sbTopTenKeywords.toString());
 		}
 	}
-
-	private static void readInput(String file) throws FileNotFoundException, IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = null;
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-			int indexOf = line.indexOf(":");
-			if (indexOf == -1)
-				continue;
-			Item item = new Item(Integer.parseInt(line.substring(0, indexOf)));
-			if (indexOf + 1 < line.length()) {
-				String[] keywords = (line.substring(indexOf + 1)).split(";");
-				for (String keyword : keywords) {
-					keyword = keyword.trim();
-					item.addKeyword(keyword);
-					allKeywords.add(keyword);
-				}
-			}
-			items.add(item);
-		}
-		reader.close();
-	}
-
 }
