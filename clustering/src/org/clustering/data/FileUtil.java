@@ -12,17 +12,17 @@ import java.util.Set;
 import org.clustering.model.Item;
 
 public class FileUtil {
-	
+
 	private Set<String> allKeywords;
+	private Set<String> uniqueKeywords;
 	private List<Item> items;
 
-	
-	
 	public void readInput(String file) throws FileNotFoundException,
 			IOException {
 		allKeywords = new HashSet<String>();
+		uniqueKeywords = new HashSet<String>();
 		items = new ArrayList<Item>();
-		
+
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
 		while ((line = reader.readLine()) != null) {
@@ -42,17 +42,30 @@ public class FileUtil {
 			items.add(item);
 		}
 		reader.close();
+		
+		for(String keyword : allKeywords) {
+			int count = 0;
+			for(Item item : items) {
+				if(item.getKeywords().contains(keyword)) {
+					count++;
+					if(count > 1) break;
+				}
+			}
+			if(count == 1) {
+				getUniqueKeywords().add(keyword);
+			}
+		}
 	}
-
-
 
 	public Set<String> getAllKeywords() {
 		return allKeywords;
 	}
 
-
-
 	public List<Item> getItems() {
 		return items;
+	}
+
+	public Set<String> getUniqueKeywords() {
+		return uniqueKeywords;
 	}
 }

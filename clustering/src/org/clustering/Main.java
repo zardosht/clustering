@@ -1,6 +1,8 @@
 package org.clustering;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,18 +37,23 @@ public class Main {
 		fileUtil.readInput("data/keywords.txt");
 		List<Item> items = fileUtil.getItems();
 		Set<String> allKeywords = fileUtil.getAllKeywords();
+		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
+		Set<String> nonUniqueKeywords = new HashSet<String>();
+		nonUniqueKeywords.addAll(allKeywords);
+		nonUniqueKeywords.removeAll(uniqueKeywords);
+		System.out.println(String.format("%d out of %d keywords are unique.", uniqueKeywords.size(), allKeywords.size()));
 		
-		int numKeywords = allKeywords.size();
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
 				Item item2 = items.get(j);
-				double distance = ItemUtil.calcDistance(item1, item2, numKeywords);
+				double distance = ItemUtil.calcDistance(item1, item2, nonUniqueKeywords);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}
 		}
 		System.out.println("End reading data: " + new Date());
+		
 
 		System.out.println("Start Clustering: " + new Date());
 		Classifier classifier = new Classifier(kCluster, items);
