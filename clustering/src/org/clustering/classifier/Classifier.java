@@ -13,7 +13,7 @@ public class Classifier {
 
 	private final int numOfClusters;
 	private final List<Item> items;
-	private Random random = new Random();
+	private Random random = new Random(1);
 
 	public Classifier(int numOfClusters, List<Item> items) {
 		this.numOfClusters = numOfClusters;
