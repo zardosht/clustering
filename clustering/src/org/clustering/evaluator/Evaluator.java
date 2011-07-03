@@ -99,7 +99,7 @@ public class Evaluator {
 		HashMap<Cluster, Double> result = new HashMap<Cluster, Double>();
 
 		for (Cluster cluster : clusters) {
-			if(cluster.getMembers().size() == 1){
+			if (cluster.getMembers().size() == 1) {
 				result.put(cluster, 0.0);
 				continue;
 			}
@@ -118,15 +118,44 @@ public class Evaluator {
 		}
 		return result;
 	}
-	
-	public int getNumClustersWithOneElements(List<Cluster> clusters){
+
+	public int getNumClustersWithOneElements(List<Cluster> clusters) {
 		int count = 0;
-		for(Cluster cluster : clusters){
-			if(cluster.getMembers().size() == 1){
-				count ++;
+		for (Cluster cluster : clusters) {
+			if (cluster.getMembers().size() == 1) {
+				count++;
 			}
 		}
 		return count;
+	}
+	
+	
+	public Double getAvgError(List<Cluster> clusters, boolean mse){
+		//Attention: clusters with only one element are not considered for calculation. 
+		Map<Cluster, Double> errors;
+		if(mse){
+			errors = getMeanSquaredError(clusters);
+		}else{
+			errors = getMeanAbsoluteError(clusters);
+		}
+		int count = 0;
+		double sum = 0.0;
+		for (Cluster cluster : errors.keySet()) {
+			Double error = errors.get(cluster);
+			if(error != 0.0){
+				sum += error;
+				count++;
+			}
+		}
+		return sum / count;
+	}
+
+	public Double getAvgMeanAbsoluteError(List<Cluster> clusters) {
+		return getAvgError(clusters, false);
+	}
+
+	public Double getAvgMeanSquaredError(List<Cluster> clusters) {
+		return getAvgError(clusters, true);
 	}
 
 }
