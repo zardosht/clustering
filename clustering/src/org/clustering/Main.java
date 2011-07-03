@@ -1,7 +1,6 @@
 package org.clustering;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		boolean printEvaluation = true;
-		int kCluster = 5;
+		int kCluster = 100;
 
 		// int filmId = getInputFilmId(args);
 		// if(filmId == -1) {

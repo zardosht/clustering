@@ -3,16 +3,12 @@ package org.clustering.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cluster {
+public abstract class Cluster {
 
 	private int id; 
-	public int getId() {
-		return id;
-	}
-
-	private Item centroid;
-	private boolean centroidChanged;
-	private List<Item> members;
+	protected Item centroid;
+	protected boolean centroidChanged;
+	protected List<Item> members;
 
 	public Cluster(int id, Item initialCentoroid) {
 		this.id = id;
@@ -34,27 +30,7 @@ public class Cluster {
 		return members;
 	}
 
-	public void computeNewCnetroid() {
-		double[] distances = new double[members.size()];
-		for (int i = 0; i < members.size(); i++) {
-			for (int j = i + 1; j < members.size(); j++) {
-				double distance = members.get(i).getDistance(members.get(j));
-				distances[i] += distance;
-				distances[j] += distance;
-			}
-		}
-		int lastIndex = 0;
-		double smallestDistance = Double.MAX_VALUE;
-		for (int i = 0; i < distances.length; i++) {
-			if (distances[i] < smallestDistance) {
-				smallestDistance = distances[i];
-				lastIndex = i;
-			}
-		}
-		Item newCentroid = members.get(lastIndex);
-		centroidChanged = (newCentroid == centroid) ? false : true;
-		centroid = newCentroid;
-	}
+	public abstract void computeNewCnetroid(); 
 
 	public void removeItem(Item item) {
 		members.remove(item);
@@ -67,6 +43,11 @@ public class Cluster {
 	public boolean centroidChanged() {
 		return centroidChanged;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
 
 	@Override
 	public String toString() {

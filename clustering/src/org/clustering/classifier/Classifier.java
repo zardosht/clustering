@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
@@ -13,7 +14,7 @@ public class Classifier {
 
 	private final int numOfClusters;
 	private final List<Item> items;
-	private Random random = new Random(1);
+	private Random random = new Random();
 
 	public Classifier(int numOfClusters, List<Item> items) {
 		this.numOfClusters = numOfClusters;
@@ -25,11 +26,16 @@ public class Classifier {
 		Set<Item> initialCentroids = selectInitialCentroids();
 		int id = 1;
 		for (Item centroid : initialCentroids) {
-			Cluster cluster = new Cluster(id, centroid);
+			Cluster cluster = createCluster(id, centroid);
 			initialClusters.add(cluster);
 			id++;
 		}
 		return initialClusters;
+	}
+
+	private Cluster createCluster(int id, Item centroid) {
+		Cluster cluster = new AvgDistCluster(id, centroid);
+		return cluster;
 	}
 
 	private Set<Item> selectInitialCentroids() {
