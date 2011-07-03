@@ -27,14 +27,14 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		boolean printEvaluation = false;
+		boolean printEvaluation = true;
 		int kCluster = 10;
 		
-		int filmId = getInputFilmId(args);
-		if(filmId == -1) {
-			System.out.println("Film Id invalid. Please give a file Id between 1 and 1682");
-			return;
-		}
+//		int filmId = getInputFilmId(args);
+//		if(filmId == -1) {
+//			System.out.println("Film Id invalid. Please give a file Id between 1 and 1682");
+//			return;
+//		}
 
 		System.out.println("Start reading data: " + new Date());
 		items = new ArrayList<Item>(1700);
@@ -54,14 +54,16 @@ public class Main {
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 	
-		printSimilarFilms(clusters, filmId);
+//		printSimilarFilms(clusters, filmId);
 		
 		if(printEvaluation){
 			Evaluator evaluator = new Evaluator();
 			printTopTenKeywordsPerCluster(evaluator, clusters);
+			printEvaluationData(evaluator,clusters);
 		}
 
 	}
+
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId) {
 		Item film = findItemById(filmId);
@@ -111,6 +113,21 @@ public class Main {
 		return filmId;
 	}
 
+	private static void printEvaluationData(Evaluator evaluator,
+			List<Cluster> clusters) {
+			Map<Cluster, Double> mae = evaluator.getMeanAbsoluteError(clusters);
+			Map<Cluster, Double> mse = evaluator.getMeanSquaredError(clusters);
+			double avg = evaluator.getAvgItemPerCluster(clusters);
+			int min = evaluator.getMinItemPerCluster(clusters);
+			int max = evaluator.getMaxItemPerCluster(clusters);
+		System.out.println("Avg per Cluster: "+avg+" Min: "+min+" Max: "+max);
+		int i = 1;
+		for(Cluster cluster : clusters) {
+			System.out.println("Cluster "+(i++)+"[ MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
+		}
+		
+	}
+	
 	private static void printTopTenKeywordsPerCluster(Evaluator evaluator,
 			List<Cluster> clusters) {
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
