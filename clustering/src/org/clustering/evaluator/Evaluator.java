@@ -118,5 +118,15 @@ public class Evaluator {
 		}
 		return result;
 	}
+	
+	public int getNumClustersWithOneElements(List<Cluster> clusters){
+		int count = 0;
+		for(Cluster cluster : clusters){
+			if(cluster.getMembers().size() == 1){
+				count ++;
+			}
+		}
+		return count;
+	}
 
 }
