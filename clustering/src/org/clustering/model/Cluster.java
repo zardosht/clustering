@@ -5,11 +5,17 @@ import java.util.List;
 
 public class Cluster {
 
+	private int id; 
+	public int getId() {
+		return id;
+	}
+
 	private Item centroid;
 	private boolean centroidChanged;
 	private List<Item> members;
 
-	public Cluster(Item initialCentoroid) {
+	public Cluster(int id, Item initialCentoroid) {
+		this.id = id;
 		this.centroid = initialCentoroid;
 		this.centroidChanged = true;
 		members = new ArrayList<Item>();
@@ -61,5 +67,12 @@ public class Cluster {
 	public boolean centroidChanged() {
 		return centroidChanged;
 	}
+
+	@Override
+	public String toString() {
+		return "Cluster " + id + "(Elements: " + getMembers().size() + ")";
+	}
+	
+	
 
 }

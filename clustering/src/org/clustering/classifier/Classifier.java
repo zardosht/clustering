@@ -23,9 +23,11 @@ public class Classifier {
 	private List<Cluster> createInitialClusters() {
 		List<Cluster> initialClusters = new ArrayList<Cluster>();
 		Set<Item> initialCentroids = selectInitialCentroids();
+		int id = 1;
 		for (Item centroid : initialCentroids) {
-			Cluster cluster = new Cluster(centroid);
+			Cluster cluster = new Cluster(id, centroid);
 			initialClusters.add(cluster);
+			id++;
 		}
 		return initialClusters;
 	}

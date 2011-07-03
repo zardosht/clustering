@@ -121,9 +121,8 @@ public class Main {
 			int min = evaluator.getMinItemPerCluster(clusters);
 			int max = evaluator.getMaxItemPerCluster(clusters);
 		System.out.println("Avg per Cluster: "+avg+" Min: "+min+" Max: "+max);
-		int i = 1;
 		for(Cluster cluster : clusters) {
-			System.out.println("Cluster "+(i++)+"[ MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
+			System.out.println("Cluster "+cluster.getId()+"[ MAE: "+mae.get(cluster)+" MSE: "+mse.get(cluster)+" ]");
 		}
 		
 	}
@@ -132,16 +131,16 @@ public class Main {
 			List<Cluster> clusters) {
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
 				.getTopTenKeywordsPerCluster(clusters);
-		int i = 1;
+	
 		for (Cluster cluster : topTenKeywordsPerCluster.keySet()) {
 			List<KeywordCount> topTenKeywordsInCluster = topTenKeywordsPerCluster
 					.get(cluster);
-			StringBuilder sb = new StringBuilder("");
+			StringBuilder sbTopTenKeywords = new StringBuilder("");
 			for (KeywordCount kc : topTenKeywordsInCluster) {
-				sb.append(kc.toString());
-				sb.append("; ");
+				sbTopTenKeywords.append(kc.toString());
+				sbTopTenKeywords.append("; ");
 			}
-			System.out.printf("Cluster %d: [%s] \n", i++, sb.toString());
+			System.out.printf("%s: [%s] \n", cluster.toString(), sbTopTenKeywords.toString());
 		}
 	}
 
