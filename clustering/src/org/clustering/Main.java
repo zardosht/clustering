@@ -16,6 +16,7 @@ import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
+import org.clustering.model.ItemUtil;
 
 public class Main {
 
@@ -28,7 +29,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		boolean printEvaluation = true;
-		int kCluster = 100;
+		int kCluster = 5;
 
 		// int filmId = getInputFilmId(args);
 		// if(filmId == -1) {
@@ -44,7 +45,11 @@ public class Main {
 		int numKeywords = allKeywords.size();
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
-				items.get(i).calcDistance(items.get(j), numKeywords);
+				Item item1 = items.get(i);
+				Item item2 = items.get(j);
+				double distance = ItemUtil.calcDistance(item1, item2, numKeywords);
+				item1.setDistance(item2, distance);
+				item2.setDistance(item1, distance);
 			}
 		}
 		System.out.println("End reading data: " + new Date());

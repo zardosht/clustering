@@ -27,19 +27,9 @@ public class Item {
 		keywords.add(keyword);
 	}
 
-	public void calcDistance(Item item, int numKeywords) {
-		double mutualKeywords = 0;
-		for(String keyword : getKeywords()) {
-			if(item.getKeywords().contains(keyword)) mutualKeywords++;
-		}
-		double similarity = mutualKeywords/numKeywords;
-//		double distance = 1/similarity;
-		double distance = 1-similarity;
-		setDistance(item, distance);
-		item.setDistance(this, distance);
-	}
+	
 
-	private void setDistance(Item item, double distance) {
+	public void setDistance(Item item, double distance) {
 		distances.put(item, distance);
 	}
 
