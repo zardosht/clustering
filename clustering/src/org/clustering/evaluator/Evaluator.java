@@ -95,16 +95,16 @@ public class Evaluator {
 
 		for(Cluster cluster : clusters) {
 			Item centroid = cluster.getCentroid();
-			double mae = 0.0;
+			double e = 0.0;
 			int counter = 0;
 			for(Item item : cluster.getMembers()) {
 				if(item!=centroid) {
 					double distance = item.getDistance(centroid);
-					mae += (square)?Math.pow(distance,2):distance;
+					e += (square)?Math.pow(distance,2):distance;
 					counter++;
 				}
 			}
-			double err = mae/(double) counter;
+			double err = e/(double) counter;
 			result.put(cluster, err);
 		}
 		return result;
