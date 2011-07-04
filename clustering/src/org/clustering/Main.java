@@ -32,9 +32,11 @@ public class Main {
 
 		if (production) {
 			production(args, avgDist);
-		}else{
-			CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"), Arrays.asList("kCluster",
-					"avgMae", "avgMse", "min", "max", "numClustersWithOneElement"));
+		} else {
+			CSVWriter csvWriter = new CSVWriter(new File(
+					"./results/results.csv"), Arrays.asList("kCluster",
+					"avgMae", "avgMse", "min", "max",
+					"numClustersWithOneElement"));
 			evaluateKs(csvWriter, avgDist);
 			csvWriter.close();
 		}
@@ -43,7 +45,7 @@ public class Main {
 
 	private static void evaluateKs(CSVWriter csvWriter, boolean avgDist)
 			throws FileNotFoundException, IOException {
-		
+
 		System.out.println("Start reading data: " + new Date());
 		FileUtil fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
@@ -72,11 +74,9 @@ public class Main {
 			Evaluator evaluator, CSVWriter csvWriter) {
 		Map<String, Object> csvRecord = new HashMap<String, Object>();
 		csvRecord.put("kCluster", kCluster);
-		Double avgMae = evaluator
-				.getAvgMeanAbsoluteError(clusters);
+		Double avgMae = evaluator.getAvgMeanAbsoluteError(clusters);
 		csvRecord.put("avgMae", avgMae);
-		Double avgMse = evaluator
-				.getAvgMeanSquaredError(clusters);
+		Double avgMse = evaluator.getAvgMeanSquaredError(clusters);
 		csvRecord.put("avgMse", avgMse);
 		int min = evaluator.getMinItemPerCluster(clusters);
 		csvRecord.put("min", min);
@@ -107,8 +107,8 @@ public class Main {
 		}
 	}
 
-	private static void production(String[] args, boolean avgDist) throws FileNotFoundException,
-			IOException {
+	private static void production(String[] args, boolean avgDist)
+			throws Exception {
 		int kCluster = 10;
 
 		int filmId = getInputFilmId(args);
@@ -137,20 +137,21 @@ public class Main {
 		Classifier classifier = new Classifier(kCluster, items, avgDist);
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
-		
+
 		System.out.println("Start writing result file " + new Date());
 		fileUtil.wirteClusteringResult(new File("results/k10.res"), clusters);
 		System.out.println("End writing result file " + new Date());
-		
+
 		System.out.println("Start reading result file " + new Date());
-		List<Cluster> readClusteringResults = fileUtil.readClusteringResults(new File("results/k10.res"));
+		List<Cluster> readClusteringResults = fileUtil
+				.readClusteringResults(new File("results/k10.res"));
 		System.out.println("End reading result file " + new Date());
 
-		//printSimilarFilms(clusters, filmId, items);
+		printSimilarFilms(clusters, filmId, items);
 	}
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId,
-			List<Item> items) {
+			List<Item> items) throws Exception {
 		Item film = findItemById(filmId, items);
 		if (film == null) {
 			throw new IllegalStateException(
@@ -168,9 +169,17 @@ public class Main {
 					"The given film is not contained in any cluster. Id: "
 							+ filmId);
 		}
+
+		Map<Integer, String> map = FileUtil.importMoviesFromFile("data/u.item");
+
+		System.out.println("Looking for similar movies of movie "
+				+ film.getItemNumber() + " " + map.get(film.getItemNumber()));
+
+		int max = 20;
 		for (Item item : filmCluster.getMembers()) {
-			System.out.print(item.toString());
+			System.out.print("Movie "+item.getItemNumber()+": "+map.get(item.getItemNumber())+" ");
 			System.out.println(item.getKeywords());
+			if(max--<=0) break;
 		}
 
 	}
@@ -185,13 +194,12 @@ public class Main {
 	}
 
 	private static int getInputFilmId(String[] args) {
-		if (args.length > 1) {
+		if (args.length != 1) {
 			return -1;
 		}
 		int filmId = -1;
 		try {
 			filmId = Integer.valueOf(args[0]);
-
 		} catch (NumberFormatException e) {
 			filmId = -1;
 		}
