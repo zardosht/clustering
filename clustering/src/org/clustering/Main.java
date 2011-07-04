@@ -109,7 +109,6 @@ public class Main {
 
 	private static void production(String[] args, boolean avgDist) throws FileNotFoundException,
 			IOException {
-		boolean printEvaluation = true;
 		int kCluster = 10;
 
 		int filmId = getInputFilmId(args);
@@ -138,8 +137,16 @@ public class Main {
 		Classifier classifier = new Classifier(kCluster, items, avgDist);
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
+		
+		System.out.println("Start writing result file " + new Date());
+		fileUtil.wirteClusteringResult(new File("results/k10.res"), clusters);
+		System.out.println("End writing result file " + new Date());
+		
+		System.out.println("Start reading result file " + new Date());
+		List<Cluster> readClusteringResults = fileUtil.readClusteringResults(new File("results/k10.res"));
+		System.out.println("End reading result file " + new Date());
 
-		printSimilarFilms(clusters, filmId, items);
+		//printSimilarFilms(clusters, filmId, items);
 	}
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId,

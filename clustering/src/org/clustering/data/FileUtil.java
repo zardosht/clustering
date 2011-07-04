@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.plaf.SliderUI;
+
 import org.apache.commons.io.FileUtils;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
@@ -72,7 +74,7 @@ public class FileUtil {
 		return uniqueKeywords;
 	}
 	
-	public void wirteClusteringResult(File outputFile, List<Cluster> clusters){
+	public void wirteClusteringResult(File outputFile, List<Cluster> clusters) throws IOException{
 		StringBuilder sb = new StringBuilder("");
 		for(Cluster cluster : clusters){
 			for(Item item : cluster.getMembers()){
@@ -81,9 +83,33 @@ public class FileUtil {
 			}
 			sb.append(String.format("\n"));
 		}
+		FileUtils.writeStringToFile(outputFile, sb.toString());
 	}
 	
-	public List<Cluster> readClusteringResults(File inputFile){
-		return null;
+	public List<Cluster> readClusteringResults(File inputFile) throws IOException{
+		List<Cluster> clusters = new ArrayList<Cluster>();
+		String data = FileUtils.readFileToString(inputFile);
+		String[] split = data.split("\n");
+		for(int i = 0; i < split.length; i++){
+			String[] items = split[i].split(";");
+			Cluster cluster = getCluster(i);
+			for(int j = 0; j < items.length; j ++){
+				int itemId = Integer.parseInt(items[j]);
+				cluster.addItem(new Item(itemId));
+			}
+			clusters.add(cluster);
+		}
+		
+		
+		return clusters;
+	}
+
+	private Cluster getCluster(int i) {
+		Cluster cluster = new Cluster(i, null) {
+			@Override
+			public void computeNewCnetroid() {
+			}
+		};
+		return cluster;
 	}
 }
