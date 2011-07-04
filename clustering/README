@@ -1,0 +1,11 @@
+Um das Programm zu starten geben sie folgenden Befehl in Ihre Konsole ein:
+
+ java -jar clustering.jar [args]
+
+Das Programm hat folgende Argumente bzw. Modi:
+
+-cluster <clusterCount>: Berechnet alle Cluster mit der angegebenen Anzahl und speichert diese in einer Datei in /results ordner ab. Zusätzlich werden auf der Konsole die Top10 Keywords pro Cluster ausgegeben.
+
+<filmid> <clusterCount>: Gibt für den spezifizierten Film eine Menge von ähnlichen zurück. ClusterCount gibt an, welche vorberechnete Cluster-Ergebnisse verwendet werden sollen. Die clustering is bereits for k=10, 20, und 70 berechnet worden. 
+
+-evaluation: Führt eine Evaluierung über mehrere K (2-200) aus und gibt diese in einer CSV-Datei aus (Jaccard-Distanz und AvgCentroid)
