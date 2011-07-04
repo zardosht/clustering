@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.plaf.SliderUI;
@@ -47,16 +49,17 @@ public class FileUtil {
 			items.add(item);
 		}
 		reader.close();
-		
-		for(String keyword : allKeywords) {
+
+		for (String keyword : allKeywords) {
 			int count = 0;
-			for(Item item : items) {
-				if(item.getKeywords().contains(keyword)) {
+			for (Item item : items) {
+				if (item.getKeywords().contains(keyword)) {
 					count++;
-					if(count > 1) break;
+					if (count > 1)
+						break;
 				}
 			}
-			if(count == 1) {
+			if (count == 1) {
 				getUniqueKeywords().add(keyword);
 			}
 		}
@@ -73,11 +76,12 @@ public class FileUtil {
 	public Set<String> getUniqueKeywords() {
 		return uniqueKeywords;
 	}
-	
-	public void wirteClusteringResult(File outputFile, List<Cluster> clusters) throws IOException{
+
+	public void wirteClusteringResult(File outputFile, List<Cluster> clusters)
+			throws IOException {
 		StringBuilder sb = new StringBuilder("");
-		for(Cluster cluster : clusters){
-			for(Item item : cluster.getMembers()){
+		for (Cluster cluster : clusters) {
+			for (Item item : cluster.getMembers()) {
 				sb.append(item.getItemNumber());
 				sb.append(";");
 			}
@@ -85,22 +89,22 @@ public class FileUtil {
 		}
 		FileUtils.writeStringToFile(outputFile, sb.toString());
 	}
-	
-	public List<Cluster> readClusteringResults(File inputFile) throws IOException{
+
+	public List<Cluster> readClusteringResults(File inputFile)
+			throws IOException {
 		List<Cluster> clusters = new ArrayList<Cluster>();
 		String data = FileUtils.readFileToString(inputFile);
 		String[] split = data.split("\n");
-		for(int i = 0; i < split.length; i++){
+		for (int i = 0; i < split.length; i++) {
 			String[] items = split[i].split(";");
 			Cluster cluster = getCluster(i);
-			for(int j = 0; j < items.length; j ++){
+			for (int j = 0; j < items.length; j++) {
 				int itemId = Integer.parseInt(items[j]);
 				cluster.addItem(new Item(itemId));
 			}
 			clusters.add(cluster);
 		}
-		
-		
+
 		return clusters;
 	}
 
@@ -111,5 +115,21 @@ public class FileUtil {
 			}
 		};
 		return cluster;
+	}
+
+	public static Map<Integer, String> importMoviesFromFile(String movieFile)
+			throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(movieFile));
+		HashMap<Integer, String> titles = new HashMap<Integer, String>();
+		String line = null;
+		int lineNumber = 0;
+		while ((line = reader.readLine()) != null) {
+			lineNumber++;
+			String[] split = line.split("\t");
+			String id = split[0];
+			String title = split[1];
+			titles.put(Integer.parseInt(id), title);
+		}
+		return titles;
 	}
 }
