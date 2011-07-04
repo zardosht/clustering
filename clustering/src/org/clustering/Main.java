@@ -46,7 +46,6 @@ public class Main {
 						.println("Film Id invalid. Please give a file Id between 1 and 1682");
 				return;
 			}
-			// TODO: select the best result file as input.
 			production(inputFilmId, "results/k" + kCluster + ".res");
 
 		} else {
@@ -87,12 +86,15 @@ public class Main {
 	}
 
 	private static void printUsage() {
-		System.out.println("this");
-		// -cluster -xx (clusters, xx= num of clusters, writes to kxx.res,
-		// prints the top ten)
-		// -evaluation (evaluation, evaluates for different values of k using
-		// jacard, writes to eval-result.csv)
-		// 1334 (production, filmId)
+		System.out.println("Usage: ");
+		System.out.println("To cluster the data set. kCluster is an integer for number of clusters:");
+		System.out.println("java -jar clustering.jar -cluster -kCluster");
+		System.out.println();
+		System.out.println("To start evaluation:");
+		System.out.println("java -jar clustering.jar -evaluate");
+		System.out.println();
+		System.out.println("To use the clustering results to find similar films. filmId must be between 1 and 1682; kCluster is one of 10, 20, or 70");
+		System.out.println("java -jar clustering.jar filmId kCluster");
 
 	}
 
