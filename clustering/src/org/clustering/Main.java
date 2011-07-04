@@ -16,7 +16,6 @@ import org.clustering.data.CSVWriter;
 import org.clustering.data.FileUtil;
 import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
-import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 import org.clustering.model.ItemUtil;
@@ -28,7 +27,7 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		boolean production = false;
+		boolean production = true;
 		boolean avgDist = true;
 
 		if (production) {
@@ -95,12 +94,13 @@ public class Main {
 	 */
 	private static void calcDistances(List<Item> items,
 			Set<String> nonUniqueKeywords) {
+		boolean useJacard = true;
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
 				Item item2 = items.get(j);
 				double distance = ItemUtil.calcDistance(item1, item2,
-						nonUniqueKeywords);
+						nonUniqueKeywords, useJacard);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}
@@ -110,7 +110,7 @@ public class Main {
 	private static void production(String[] args, boolean avgDist) throws FileNotFoundException,
 			IOException {
 		boolean printEvaluation = true;
-		int kCluster = 100;
+		int kCluster = 10;
 
 		// int filmId = getInputFilmId(args);
 		// if (filmId == -1) {
