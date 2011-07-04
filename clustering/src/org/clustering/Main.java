@@ -33,12 +33,12 @@ public class Main {
 		} else if (args.length == 2 && args[0].equals("-cluster")) {
 			int kCluster = Integer.parseInt(args[1]);
 			createCluster(kCluster);
-		} else if (args.length == 2) {
+		} else if (args.length == 3) {
 			int inputFilmId = getInputFilmId(args);
 			int kCluster = 20;
-			try{
+			try {
 				kCluster = Integer.parseInt(args[1]);
-			}catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			}
 			if (inputFilmId == -1) {
@@ -46,7 +46,9 @@ public class Main {
 						.println("Film Id invalid. Please give a file Id between 1 and 1682");
 				return;
 			}
-			production(inputFilmId, "results/k" + kCluster + ".res");
+			boolean outputKeywords = new Boolean(args[2]);
+			production(inputFilmId, "results/k" + kCluster + ".res",
+					outputKeywords);
 
 		} else {
 			printUsage();
@@ -87,14 +89,16 @@ public class Main {
 
 	private static void printUsage() {
 		System.out.println("Usage: ");
-		System.out.println("To cluster the data set. kCluster is an integer for number of clusters:");
+		System.out
+				.println("To cluster the data set. kCluster is an integer for number of clusters:");
 		System.out.println("java -jar clustering.jar -cluster -kCluster");
 		System.out.println();
 		System.out.println("To start evaluation:");
 		System.out.println("java -jar clustering.jar -evaluate");
 		System.out.println();
-		System.out.println("To use the clustering results to find similar films. filmId must be between 1 and 1682; kCluster is one of 10, 20, or 70");
-		System.out.println("java -jar clustering.jar filmId kCluster");
+		System.out
+				.println("To use the clustering results to find similar films. filmId must be between 1 and 1682; kCluster is one of 10, 20, or 70; outputKeyword to print out keywords of films (warning frightening output on the console ;) )");
+		System.out.println("java -jar clustering.jar filmId kCluster outputKeywords");
 
 	}
 
@@ -170,7 +174,8 @@ public class Main {
 		}
 	}
 
-	private static void production(int filmId, String file) throws Exception {
+	private static void production(int filmId, String file,
+			boolean outputKeywords) throws Exception {
 		System.out.println("Start reading result file " + new Date());
 		FileUtil fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
@@ -178,11 +183,11 @@ public class Main {
 		List<Cluster> readClusteringResults = fileUtil.readClusteringResults(
 				new File(file), items);
 		System.out.println("End reading result file " + new Date());
-		printSimilarFilms(readClusteringResults, filmId, items);
+		printSimilarFilms(readClusteringResults, filmId, items, outputKeywords);
 	}
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId,
-			List<Item> items) throws Exception {
+			List<Item> items, boolean outputKeywords) throws Exception {
 		Item film = findItemById(filmId, items);
 		if (film == null) {
 			throw new IllegalStateException(
@@ -210,7 +215,9 @@ public class Main {
 		for (Item item : filmCluster.getMembers()) {
 			System.out.print("Movie " + item.getItemNumber() + ": "
 					+ map.get(item.getItemNumber()) + " ");
-			System.out.println(item.getKeywords());
+			if (outputKeywords)
+				System.out.print(item.getKeywords());
+			System.out.println("");
 			if (max-- <= 0)
 				break;
 		}
@@ -227,7 +234,7 @@ public class Main {
 	}
 
 	private static int getInputFilmId(String[] args) {
-		if (args.length != 2) {
+		if (args.length != 3) {
 			return -1;
 		}
 		int filmId = -1;
