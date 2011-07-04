@@ -1,6 +1,7 @@
 package org.clustering.data;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
 public class FileUtil {
@@ -67,5 +70,20 @@ public class FileUtil {
 
 	public Set<String> getUniqueKeywords() {
 		return uniqueKeywords;
+	}
+	
+	public void wirteClusteringResult(File outputFile, List<Cluster> clusters){
+		StringBuilder sb = new StringBuilder("");
+		for(Cluster cluster : clusters){
+			for(Item item : cluster.getMembers()){
+				sb.append(item.getItemNumber());
+				sb.append(";");
+			}
+			sb.append(String.format("\n"));
+		}
+	}
+	
+	public List<Cluster> readClusteringResults(File inputFile){
+		return null;
 	}
 }

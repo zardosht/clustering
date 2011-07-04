@@ -140,13 +140,6 @@ public class Main {
 		System.out.println("End Clustering: " + new Date());
 
 		printSimilarFilms(clusters, filmId, items);
-
-		if (printEvaluation) {
-			Evaluator evaluator = new Evaluator();
-			printTopTenKeywordsPerCluster(evaluator, clusters);
-			System.out.println();
-			printEvaluationData(evaluator, clusters);
-		}
 	}
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId,
