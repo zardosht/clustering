@@ -112,12 +112,12 @@ public class Main {
 		boolean printEvaluation = true;
 		int kCluster = 10;
 
-		// int filmId = getInputFilmId(args);
-		// if (filmId == -1) {
-		// System.out
-		// .println("Film Id invalid. Please give a file Id between 1 and 1682");
-		// return;
-		// }
+		int filmId = getInputFilmId(args);
+		if (filmId == -1) {
+			System.out
+					.println("Film Id invalid. Please give a file Id between 1 and 1682");
+			return;
+		}
 
 		System.out.println("Start reading data: " + new Date());
 		FileUtil fileUtil = new FileUtil();
@@ -139,7 +139,7 @@ public class Main {
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 
-		// printSimilarFilms(clusters, filmId, items);
+		printSimilarFilms(clusters, filmId, items);
 
 		if (printEvaluation) {
 			Evaluator evaluator = new Evaluator();

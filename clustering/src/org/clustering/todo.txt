@@ -1,11 +1,15 @@
+1. make user friendly output: the user gives film id, we print the name of similar films along with their keywords.
+3. diagrams trend of error, #oneElementCluster, #maxCluster with K
+4. lese über distance measures for binary data
+2. writer clustering result files for 3 Ks, so that output is faster. 
 
-* do for both Cluster impl. 
-1. for k = 2 bis 200 step 2, schreib csv
-2. graph : k ---> errors, #einElementig, max
-3. from 2 => 3 Ks
+k20.res
 
-* nice to do: 
-
+cluser 1: 1, 5, 165, 1543, 23, 245, ....
+cluster2: .....
+...
+...
+cluster 20: 
 
 
 ****************************************************************
