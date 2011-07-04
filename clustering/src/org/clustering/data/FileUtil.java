@@ -90,8 +90,8 @@ public class FileUtil {
 		FileUtils.writeStringToFile(outputFile, sb.toString());
 	}
 
-	public List<Cluster> readClusteringResults(File inputFile)
-			throws IOException {
+	public List<Cluster> readClusteringResults(File inputFile,
+			List<Item> originalItems) throws IOException {
 		List<Cluster> clusters = new ArrayList<Cluster>();
 		String data = FileUtils.readFileToString(inputFile);
 		String[] split = data.split("\n");
@@ -100,12 +100,22 @@ public class FileUtil {
 			Cluster cluster = getCluster(i);
 			for (int j = 0; j < items.length; j++) {
 				int itemId = Integer.parseInt(items[j]);
-				cluster.addItem(new Item(itemId));
+				Item item = getItem(itemId, originalItems);
+				if (item != null) cluster.addItem(item);
 			}
 			clusters.add(cluster);
 		}
 
 		return clusters;
+	}
+
+	private Item getItem(int itemId, List<Item> items) {
+		for (Item item : items) {
+			if (item.getItemNumber() == itemId) {
+				return item;
+			}
+		}
+		return null;
 	}
 
 	private Cluster getCluster(int i) {

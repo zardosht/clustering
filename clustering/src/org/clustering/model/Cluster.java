@@ -15,7 +15,9 @@ public abstract class Cluster {
 		this.centroid = initialCentoroid;
 		this.centroidChanged = true;
 		members = new ArrayList<Item>();
-		members.add(centroid);
+		if(initialCentoroid != null){
+			members.add(centroid);
+		}
 	}
 
 	public Item getCentroid() {

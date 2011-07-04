@@ -27,20 +27,81 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		boolean production = true;
-		boolean avgDist = true;
 
-		if (production) {
-			production(args, avgDist);
+		if (args.length == 1 && args[0].equals("-evaluate")) {
+			evaluate();
+		} else if (args.length == 2 && args[0].equals("-cluster")) {
+			int kCluster = Integer.parseInt(args[1]);
+			createCluster(kCluster);
+		} else if (args.length == 2) {
+			int inputFilmId = getInputFilmId(args);
+			int kCluster = 20;
+			try{
+				kCluster = Integer.parseInt(args[1]);
+			}catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+			if (inputFilmId == -1) {
+				System.out
+						.println("Film Id invalid. Please give a file Id between 1 and 1682");
+				return;
+			}
+			// TODO: select the best result file as input.
+			production(inputFilmId, "results/k" + kCluster + ".res");
+
 		} else {
-			CSVWriter csvWriter = new CSVWriter(new File(
-					"./results/results.csv"), Arrays.asList("kCluster",
-					"avgMae", "avgMse", "min", "max",
-					"numClustersWithOneElement"));
-			evaluateKs(csvWriter, avgDist);
-			csvWriter.close();
+			printUsage();
 		}
 
+	}
+
+	private static void createCluster(int kCluster) throws Exception {
+		boolean avgDist = true;
+
+		System.out.println("Start reading data: " + new Date());
+		FileUtil fileUtil = new FileUtil();
+		fileUtil.readInput("data/keywords.txt");
+		List<Item> items = fileUtil.getItems();
+		Set<String> allKeywords = fileUtil.getAllKeywords();
+		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
+		Set<String> nonUniqueKeywords = new HashSet<String>();
+		nonUniqueKeywords.addAll(allKeywords);
+		nonUniqueKeywords.removeAll(uniqueKeywords);
+		System.out.println(String.format("%d out of %d keywords are unique.",
+				uniqueKeywords.size(), allKeywords.size()));
+
+		calcDistances(items, nonUniqueKeywords);
+		System.out.println("End reading data: " + new Date());
+
+		System.out.println("Start Clustering: " + new Date());
+		Classifier classifier = new Classifier(kCluster, items, avgDist);
+		List<Cluster> clusters = classifier.createClusters();
+		System.out.println("End Clustering: " + new Date());
+
+		System.out.println("Start writing result file " + new Date());
+		fileUtil.wirteClusteringResult(
+				new File("results/k" + kCluster + ".res"), clusters);
+		System.out.println("End writing result file " + new Date());
+
+		printTopTenKeywordsPerCluster(clusters);
+	}
+
+	private static void printUsage() {
+		System.out.println("this");
+		// -cluster -xx (clusters, xx= num of clusters, writes to kxx.res,
+		// prints the top ten)
+		// -evaluation (evaluation, evaluates for different values of k using
+		// jacard, writes to eval-result.csv)
+		// 1334 (production, filmId)
+
+	}
+
+	private static void evaluate() throws FileNotFoundException, IOException {
+		CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"),
+				Arrays.asList("kCluster", "avgMae", "avgMse", "min", "max",
+						"numClustersWithOneElement"));
+		evaluateKs(csvWriter, true);
+		csvWriter.close();
 	}
 
 	private static void evaluateKs(CSVWriter csvWriter, boolean avgDist)
@@ -107,47 +168,15 @@ public class Main {
 		}
 	}
 
-	private static void production(String[] args, boolean avgDist)
-			throws Exception {
-		int kCluster = 10;
-
-		int filmId = getInputFilmId(args);
-		if (filmId == -1) {
-			System.out
-					.println("Film Id invalid. Please give a file Id between 1 and 1682");
-			return;
-		}
-
-		System.out.println("Start reading data: " + new Date());
+	private static void production(int filmId, String file) throws Exception {
+		System.out.println("Start reading result file " + new Date());
 		FileUtil fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
 		List<Item> items = fileUtil.getItems();
-		Set<String> allKeywords = fileUtil.getAllKeywords();
-		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
-		Set<String> nonUniqueKeywords = new HashSet<String>();
-		nonUniqueKeywords.addAll(allKeywords);
-		nonUniqueKeywords.removeAll(uniqueKeywords);
-		System.out.println(String.format("%d out of %d keywords are unique.",
-				uniqueKeywords.size(), allKeywords.size()));
-
-		calcDistances(items, nonUniqueKeywords);
-		System.out.println("End reading data: " + new Date());
-
-		System.out.println("Start Clustering: " + new Date());
-		Classifier classifier = new Classifier(kCluster, items, avgDist);
-		List<Cluster> clusters = classifier.createClusters();
-		System.out.println("End Clustering: " + new Date());
-
-		System.out.println("Start writing result file " + new Date());
-		fileUtil.wirteClusteringResult(new File("results/k10.res"), clusters);
-		System.out.println("End writing result file " + new Date());
-
-		System.out.println("Start reading result file " + new Date());
-		List<Cluster> readClusteringResults = fileUtil
-				.readClusteringResults(new File("results/k10.res"));
+		List<Cluster> readClusteringResults = fileUtil.readClusteringResults(
+				new File(file), items);
 		System.out.println("End reading result file " + new Date());
-
-		printSimilarFilms(clusters, filmId, items);
+		printSimilarFilms(readClusteringResults, filmId, items);
 	}
 
 	private static void printSimilarFilms(List<Cluster> clusters, int filmId,
@@ -177,9 +206,11 @@ public class Main {
 
 		int max = 20;
 		for (Item item : filmCluster.getMembers()) {
-			System.out.print("Movie "+item.getItemNumber()+": "+map.get(item.getItemNumber())+" ");
+			System.out.print("Movie " + item.getItemNumber() + ": "
+					+ map.get(item.getItemNumber()) + " ");
 			System.out.println(item.getKeywords());
-			if(max--<=0) break;
+			if (max-- <= 0)
+				break;
 		}
 
 	}
@@ -194,7 +225,7 @@ public class Main {
 	}
 
 	private static int getInputFilmId(String[] args) {
-		if (args.length != 1) {
+		if (args.length != 2) {
 			return -1;
 		}
 		int filmId = -1;
@@ -231,8 +262,8 @@ public class Main {
 
 	}
 
-	private static void printTopTenKeywordsPerCluster(Evaluator evaluator,
-			List<Cluster> clusters) {
+	private static void printTopTenKeywordsPerCluster(List<Cluster> clusters) {
+		Evaluator evaluator = new Evaluator();
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
 				.getTopTenKeywordsPerCluster(clusters);
 
