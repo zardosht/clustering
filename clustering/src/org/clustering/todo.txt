@@ -1,15 +1,6 @@
-1. make user friendly output: the user gives film id, we print the name of similar films along with their keywords.
-3. diagrams trend of error, #oneElementCluster, #maxCluster with K
-4. lese über distance measures for binary data
-2. writer clustering result files for 3 Ks, so that output is faster. 
-
-k20.res
-
-cluser 1: 1, 5, 165, 1543, 23, 245, ....
-cluster2: .....
-...
-...
-cluster 20: 
+minimize "residual sum of squares (RSS)" 
+singleton cluster
+seed initialization: select i random vectors for each cluster and select their centeroid as the seed
 
 
 ****************************************************************

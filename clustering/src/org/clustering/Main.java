@@ -165,7 +165,9 @@ public class Main {
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
+				item1.setDistance(item1, 0.0);
 				Item item2 = items.get(j);
+				item2.setDistance(item2, 0.0);
 				double distance = ItemUtil.calcDistance(item1, item2,
 						nonUniqueKeywords, useJacard);
 				item1.setDistance(item2, distance);

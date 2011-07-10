@@ -10,6 +10,7 @@ import org.clustering.model.AbsDistCluster;
 import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
+import org.clustering.model.MinRSSCluster;
 
 public class Classifier {
 
@@ -43,6 +44,7 @@ public class Classifier {
 		}else{
 			cluster = new AbsDistCluster(id, centroid);
 		}
+		//cluster = new MinRSSCluster(id, centroid);
 		return cluster;
 	}
 
