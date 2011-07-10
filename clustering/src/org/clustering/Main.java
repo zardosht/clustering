@@ -3,6 +3,7 @@ package org.clustering;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,15 +20,20 @@ import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 import org.clustering.model.ItemUtil;
+import org.clustering.util.VisualisationUtil;
 
 public class Main {
+
+	private static FileUtil fileUtil;
+	private static List<Item> items;
 
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-
+		//readData();
+		
 		if (args.length == 1 && args[0].equals("-evaluate")) {
 			evaluate();
 		} else if (args.length == 2 && args[0].equals("-cluster")) {
@@ -59,21 +65,7 @@ public class Main {
 	private static void createCluster(int kCluster) throws Exception {
 		boolean avgDist = true;
 
-		System.out.println("Start reading data: " + new Date());
-		FileUtil fileUtil = new FileUtil();
-		fileUtil.readInput("data/keywords.txt");
-		List<Item> items = fileUtil.getItems();
-		Set<String> allKeywords = fileUtil.getAllKeywords();
-		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
-		Set<String> nonUniqueKeywords = new HashSet<String>();
-		nonUniqueKeywords.addAll(allKeywords);
-		nonUniqueKeywords.removeAll(uniqueKeywords);
-		System.out.println(String.format("%d out of %d keywords are unique.",
-				uniqueKeywords.size(), allKeywords.size()));
-
-		calcDistances(items, nonUniqueKeywords);
-		System.out.println("End reading data: " + new Date());
-
+		Set<String> nonUniqueKeywords = readData();
 		System.out.println("Start Clustering: " + new Date());
 		Classifier classifier = new Classifier(kCluster, items, avgDist);
 		List<Cluster> clusters = classifier.createClusters();
@@ -85,6 +77,30 @@ public class Main {
 		System.out.println("End writing result file " + new Date());
 
 		printTopTenKeywordsPerCluster(clusters);
+		
+		new VisualisationUtil(nonUniqueKeywords, "results/clusteredItems.png").drawClusters(clusters);
+	}
+	
+	private static Set<String> readData() throws FileNotFoundException, IOException{
+		System.out.println("Start reading data: " + new Date());
+		fileUtil = new FileUtil();
+		fileUtil.readInput("data/keywords.txt");
+		items = fileUtil.getItems();
+		Set<String> allKeywords = fileUtil.getAllKeywords();
+		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
+		Set<String> nonUniqueKeywords = fileUtil.getNonUniqueKeywords();
+		System.out.println(String.format("%d out of %d keywords are unique.",
+				uniqueKeywords.size(), allKeywords.size()));
+		
+		System.out.println("Starting Visualisation: " + new Date());
+		new VisualisationUtil(nonUniqueKeywords, "results/items_before_clustering.png").drawItems(items);
+		System.out.println("End Visualisation: " + new Date());
+
+		System.out.println("Starting calcDistance: " + new Date());
+		calcDistances(items, nonUniqueKeywords);
+		System.out.println("End calcDistance: " + new Date());
+		System.out.println("End reading data: " + new Date());
+		return nonUniqueKeywords;
 	}
 
 	private static void printUsage() {
@@ -113,18 +129,7 @@ public class Main {
 	private static void evaluateKs(CSVWriter csvWriter, boolean avgDist)
 			throws FileNotFoundException, IOException {
 
-		System.out.println("Start reading data: " + new Date());
-		FileUtil fileUtil = new FileUtil();
-		fileUtil.readInput("data/keywords.txt");
-		List<Item> items = fileUtil.getItems();
-		Set<String> allKeywords = fileUtil.getAllKeywords();
-		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
-		Set<String> nonUniqueKeywords = new HashSet<String>();
-		nonUniqueKeywords.addAll(allKeywords);
-		nonUniqueKeywords.removeAll(uniqueKeywords);
-
-		calcDistances(items, nonUniqueKeywords);
-		System.out.println("End reading data: " + new Date());
+		readData();
 		Evaluator evaluator = new Evaluator();
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
@@ -249,28 +254,6 @@ public class Main {
 			return -1;
 		}
 		return filmId;
-	}
-
-	private static void printEvaluationData(Evaluator evaluator,
-			List<Cluster> clusters) {
-
-		Map<Cluster, Double> mae = evaluator.getMeanAbsoluteError(clusters);
-		Map<Cluster, Double> mse = evaluator.getMeanSquaredError(clusters);
-		double avg = evaluator.getAvgItemPerCluster(clusters);
-		int min = evaluator.getMinItemPerCluster(clusters);
-		int max = evaluator.getMaxItemPerCluster(clusters);
-		int numClustersWithOneElement = evaluator
-				.getNumClustersWithOneElements(clusters);
-		System.out
-				.println(String
-						.format("Avg per Cluster: %.2f ; Min: %d; Max: %d; NumClustersWithOneElement: %d",
-								avg, min, max, numClustersWithOneElement));
-		System.out.println();
-		for (Cluster cluster : clusters) {
-			System.out.println("Cluster " + cluster.getId() + "[ MAE: "
-					+ mae.get(cluster) + " MSE: " + mse.get(cluster) + " ]");
-		}
-
 	}
 
 	private static void printTopTenKeywordsPerCluster(List<Cluster> clusters) {

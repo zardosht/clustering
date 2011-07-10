@@ -39,12 +39,12 @@ public class Classifier {
 
 	private Cluster createCluster(int id, Item centroid) {
 		Cluster cluster = null;
-		if(avgDist){
-			cluster = new AvgDistCluster(id, centroid);
-		}else{
-			cluster = new AbsDistCluster(id, centroid);
-		}
-		//cluster = new MinRSSCluster(id, centroid);
+//		if(avgDist){
+//			cluster = new AvgDistCluster(id, centroid);
+//		}else{
+//			cluster = new AbsDistCluster(id, centroid);
+//		}
+		cluster = new MinRSSCluster(id, centroid);
 		return cluster;
 	}
 

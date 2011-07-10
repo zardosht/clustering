@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.plaf.SliderUI;
-
 import org.apache.commons.io.FileUtils;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
@@ -141,5 +139,12 @@ public class FileUtil {
 			titles.put(Integer.parseInt(id), title);
 		}
 		return titles;
+	}
+
+	public Set<String> getNonUniqueKeywords() {
+		Set<String> nonUniqueKeywords = new HashSet<String>();
+		nonUniqueKeywords.addAll(allKeywords);
+		nonUniqueKeywords.removeAll(uniqueKeywords);
+		return nonUniqueKeywords;
 	}
 }
