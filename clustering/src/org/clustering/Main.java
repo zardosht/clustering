@@ -61,11 +61,9 @@ public class Main {
 	}
 
 	private static void createCluster(int kCluster) throws Exception {
-		boolean avgDist = true;
-
 		Set<String> nonUniqueKeywords = readData();
 		System.out.println("Start Clustering: " + new Date());
-		Classifier classifier = new Classifier(kCluster, items, avgDist);
+		Classifier classifier = new Classifier(kCluster, items);
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 
@@ -132,7 +130,7 @@ public class Main {
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
 					+ new Date());
-			Classifier classifier = new Classifier(kCluster, items, avgDist);
+			Classifier classifier = new Classifier(kCluster, items);
 			List<Cluster> clusters = classifier.createClusters();
 			writeCsvRecord(kCluster, clusters, evaluator, csvWriter);
 			System.out.println("End Clustering: " + new Date());
