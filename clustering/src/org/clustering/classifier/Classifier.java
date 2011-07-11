@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.clustering.model.AbsDistCluster;
-import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 import org.clustering.model.MinRSSCluster;

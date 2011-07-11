@@ -1,6 +1,12 @@
-minimize "residual sum of squares (RSS)" 
-singleton cluster
-seed initialization: select i random vectors for each cluster and select their centeroid as the seed
+1. Add two other implementations of distance.
+2. Compare k-means results with a third distance measure that is not used in clustering. 
+   For all evaluations use both MinRss centroid and AvgDistCentroid.
+3. Find a good combination of distance function, centroid function and find Good K for each.
+4. Visualise results from step 3
+5. Implement hierarchical clustering and visualize its results
+6. (nice to have) Implement text categorization and visualize its results. 
+7. Creates slides for presentation.
+
 
 
 ****************************************************************
