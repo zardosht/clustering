@@ -44,9 +44,9 @@ public enum DistanceTypes {
 	OTSUKA_SIMILARITY, 
 	
 	/**
-	 * pattern-difference distance = 4bc / pow((a+b+c+d), 2)
+	 * lance and williams distance = (b + c) / (2a + b + c)
 	 */
-	PATTERN_DIFFERENCE_DISTANCE, 
+	LANCE_AND_WILLIAMS_DIASTANCE, 
 	
 	/**
 	 * chord distance = sqrt(2(1- (a / sqrt((a+b)(a+c)))))

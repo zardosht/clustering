@@ -1,6 +1,6 @@
 1. Add two other implementations of distance.
-2. Compare k-means results with a third distance measure that is not used in clustering using MinRSS objective function. 
-   For all evaluations use AvgDistCentroid. Use different seed selection strategies (random vs. choosing seed as the
+2. Compare k-means results with a third distance measure that is not used in clustering. 
+   Also Use different seed selection strategies (random vs. choosing seed as the
    centroid of i randomly selected vectors)
 3. Find good combinations of distance function and K. 
 4. Visualize results from step 3

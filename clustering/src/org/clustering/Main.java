@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,6 +84,7 @@ public class Main {
 		fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
 		items = fileUtil.getItems();
+		removeItemsWithoutKeyword();
 		Set<String> allKeywords = fileUtil.getAllKeywords();
 		Set<String> uniqueKeywords = fileUtil.getUniqueKeywords();
 		Set<String> nonUniqueKeywords = fileUtil.getNonUniqueKeywords();
@@ -98,6 +100,18 @@ public class Main {
 		System.out.println("End calcDistance: " + new Date());
 		System.out.println("End reading data: " + new Date());
 		return nonUniqueKeywords;
+	}
+
+	private static void removeItemsWithoutKeyword() {
+		Iterator<Item> iterator = items.iterator();
+		while(iterator.hasNext()){
+			Item item = iterator.next();
+			if(item.getKeywords().size() == 0){
+				iterator.remove();
+			}
+			
+		}
+	
 	}
 
 	private static void printUsage() {
@@ -127,7 +141,7 @@ public class Main {
 			throws FileNotFoundException, IOException {
 
 		Set<String> allKeywords = readData();
-		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.PATTERN_DIFFERENCE_DISTANCE);
+		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.JACCARD_SIMILARITY);
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
 					+ new Date());
@@ -170,7 +184,7 @@ public class Main {
 				Item item2 = items.get(j);
 				item2.setDistance(item2, 0.0);
 				double distance = DistanceUtil.calcDistance(item1, item2,
-						nonUniqueKeywords, DistanceTypes.JACCARD_SIMILARITY);
+						nonUniqueKeywords, DistanceTypes.OTSUKA_SIMILARITY);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}
@@ -253,7 +267,7 @@ public class Main {
 	}
 
 	private static void printTopTenKeywordsPerCluster(List<Cluster> clusters, Set<String> allKeywords) {
-		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.PATTERN_DIFFERENCE_DISTANCE);
+		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.JACCARD_SIMILARITY);
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
 				.getTopTenKeywordsPerCluster(clusters);
 
