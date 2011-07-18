@@ -10,12 +10,27 @@ import java.util.Map;
 import java.util.Set;
 
 import org.clustering.model.Cluster;
+import org.clustering.model.DistanceTypes;
+import org.clustering.model.DistanceUtil;
 import org.clustering.model.Item;
 
+/**
+ * The evaluator computes different measures about clusters like max number of
+ * items, min number of items, MSE, and RSS. Note that for error measures we
+ * use a different distance metric than the one used for creating clusters. This
+ * allows for independent comparison of different distance metrics.
+ * 
+ * @author zardosht
+ * 
+ */
 public class Evaluator {
 
-	public Evaluator() {
+	private DistanceTypes distanceType;
+	private final Set<String> allKeywords;
 
+	public Evaluator(Set<String> allKeywords, DistanceTypes distanceType) {
+		this.allKeywords = allKeywords;
+		this.distanceType = distanceType;
 	}
 
 	public Map<Cluster, List<KeywordCount>> getTopTenKeywordsPerCluster(
@@ -108,7 +123,7 @@ public class Evaluator {
 			int counter = 0;
 			for (Item item : cluster.getMembers()) {
 				if (item != centroid) {
-					double distance = item.getDistance(centroid);
+					double distance = DistanceUtil.calcDistance(item, centroid, allKeywords, distanceType); 
 					e += (square) ? Math.pow(distance, 2) : distance;
 					counter++;
 				}
@@ -128,21 +143,21 @@ public class Evaluator {
 		}
 		return count;
 	}
-	
-	
-	public Double getAvgError(List<Cluster> clusters, boolean mse){
-		//Attention: clusters with only one element are not considered for calculation. 
+
+	public Double getAvgError(List<Cluster> clusters, boolean mse) {
+		// Attention: clusters with only one element are not considered for
+		// calculation.
 		Map<Cluster, Double> errors;
-		if(mse){
+		if (mse) {
 			errors = getMeanSquaredError(clusters);
-		}else{
+		} else {
 			errors = getMeanAbsoluteError(clusters);
 		}
 		int count = 0;
 		double sum = 0.0;
 		for (Cluster cluster : errors.keySet()) {
 			Double error = errors.get(cluster);
-			if(error != 0.0){
+			if (error != 0.0) {
 				sum += error;
 				count++;
 			}
@@ -156,6 +171,24 @@ public class Evaluator {
 
 	public Double getAvgMeanSquaredError(List<Cluster> clusters) {
 		return getAvgError(clusters, true);
+	}
+
+	public double getRSS(List<Cluster> clusters) {
+		double rss = 0.0;
+		for(Cluster cluster : clusters){
+			rss += getClusterRss(cluster);
+		}
+		return rss;
+	}
+
+	private double getClusterRss(Cluster cluster) {
+		// RSS = sigma(x element in Cluster: pow(dist(x, centroid)), 2))
+		double clusterRSS = 0.0;
+		for (Item item : cluster.getMembers()) {
+			double dist = DistanceUtil.calcDistance(item, cluster.getCentroid(), allKeywords, distanceType);
+			clusterRSS += Math.pow(dist, 2);
+		}
+		return clusterRSS;
 	}
 
 }

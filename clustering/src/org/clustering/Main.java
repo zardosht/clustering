@@ -17,7 +17,7 @@ import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
 import org.clustering.model.DistanceTypes;
-import org.clustering.model.DitanceUtil;
+import org.clustering.model.DistanceUtil;
 import org.clustering.model.Item;
 import org.clustering.util.VisualisationUtil;
 
@@ -73,7 +73,7 @@ public class Main {
 				new File("results/k" + kCluster + ".res"), clusters);
 		System.out.println("End writing result file " + new Date());
 
-		printTopTenKeywordsPerCluster(clusters);
+		printTopTenKeywordsPerCluster(clusters, nonUniqueKeywords);
 		
 		new VisualisationUtil(nonUniqueKeywords, "results/clusteredItems.png").drawClusters(clusters);
 	}
@@ -119,15 +119,15 @@ public class Main {
 		CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"),
 				Arrays.asList("kCluster", "avgMae", "avgMse", "min", "max",
 						"numClustersWithOneElement"));
-		evaluateKs(csvWriter, true);
+		evaluateKs(csvWriter);
 		csvWriter.close();
 	}
 
-	private static void evaluateKs(CSVWriter csvWriter, boolean avgDist)
+	private static void evaluateKs(CSVWriter csvWriter)
 			throws FileNotFoundException, IOException {
 
-		readData();
-		Evaluator evaluator = new Evaluator();
+		Set<String> allKeywords = readData();
+		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.PATTERN_DIFFERENCE_DISTANCE);
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
 					+ new Date());
@@ -169,8 +169,8 @@ public class Main {
 				item1.setDistance(item1, 0.0);
 				Item item2 = items.get(j);
 				item2.setDistance(item2, 0.0);
-				double distance = DitanceUtil.calcDistance(item1, item2,
-						nonUniqueKeywords, DistanceTypes.JACCARD);
+				double distance = DistanceUtil.calcDistance(item1, item2,
+						nonUniqueKeywords, DistanceTypes.JACCARD_SIMILARITY);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}
@@ -252,8 +252,8 @@ public class Main {
 		return filmId;
 	}
 
-	private static void printTopTenKeywordsPerCluster(List<Cluster> clusters) {
-		Evaluator evaluator = new Evaluator();
+	private static void printTopTenKeywordsPerCluster(List<Cluster> clusters, Set<String> allKeywords) {
+		Evaluator evaluator = new Evaluator(allKeywords, DistanceTypes.PATTERN_DIFFERENCE_DISTANCE);
 		Map<Cluster, List<KeywordCount>> topTenKeywordsPerCluster = evaluator
 				.getTopTenKeywordsPerCluster(clusters);
 
