@@ -16,8 +16,9 @@ import org.clustering.data.FileUtil;
 import org.clustering.evaluator.Evaluator;
 import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
+import org.clustering.model.DistanceTypes;
+import org.clustering.model.DitanceUtil;
 import org.clustering.model.Item;
-import org.clustering.model.ItemUtil;
 import org.clustering.util.VisualisationUtil;
 
 public class Main {
@@ -162,15 +163,14 @@ public class Main {
 	 */
 	private static void calcDistances(List<Item> items,
 			Set<String> nonUniqueKeywords) {
-		boolean useJacard = true;
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
 				item1.setDistance(item1, 0.0);
 				Item item2 = items.get(j);
 				item2.setDistance(item2, 0.0);
-				double distance = ItemUtil.calcDistance(item1, item2,
-						nonUniqueKeywords, useJacard);
+				double distance = DitanceUtil.calcDistance(item1, item2,
+						nonUniqueKeywords, DistanceTypes.JACCARD);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}

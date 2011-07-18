@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.clustering.model.AvgDistCluster;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
@@ -34,7 +33,7 @@ public class Classifier {
 	}
 
 	private Cluster createCluster(int id, Item centroid) {
-		Cluster	cluster = new AvgDistCluster(id, centroid);
+		Cluster	cluster = new Cluster(id, centroid);
 		return cluster;
 	}
 
