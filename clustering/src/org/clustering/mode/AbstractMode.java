@@ -2,6 +2,7 @@ package org.clustering.mode;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,17 +43,31 @@ public class AbstractMode {
 
 			// check modeprefix. e.g. "-cluster"
 			if (modePrefix != null && !modePrefix.isEmpty()) {
-				if (!modePrefix.equals(args[0])) {
+				if (args.length == 0 || !modePrefix.equals(args[0])) {
 					return false;
 				}
 				args = Arrays.copyOfRange(args, 1, args.length);
 			}
 			eArgs = new Object[execMethod.getParameterTypes().length];
 			int i = 0;
-			for (Class clazz : execMethod.getParameterTypes()) {
-				if (Integer.class.equals(clazz)) {
-
+			for (@SuppressWarnings("rawtypes") Class clazz : execMethod.getParameterTypes()) {
+				if(i >= args.length) {
+					return false;
 				}
+				
+				if (Integer.class.equals(clazz)) {
+					eArgs[i] = Integer.parseInt(args[i]);
+				} else if(Double.class.equals(clazz)) {
+					eArgs[i] = Double.parseDouble(args[i]);
+				} else if(String.class.equals(clazz)) {
+					eArgs[i] = args[i];
+				} else if(Boolean.class.equals(clazz)) {
+					eArgs[i] = Boolean.parseBoolean(args[i]);
+				} else {
+					return false;
+				}
+				
+				i++;
 			}
 		} catch (Exception e) {
 			return false;
@@ -64,9 +79,13 @@ public class AbstractMode {
 	}
 
 	private Method getModeExecMethod() {
+		// WHY AREN'T THE F!&?%$§G ANNOTATIONS NOT RECOGNIZED
 		for (Method method : getClass().getMethods()) {
-			if (method.getAnnotation(ModeExec.class) != null) {
-				return method;
+//			if (method.getAnnotation(ModeExec.class) != null) {
+//				return method;
+//			}
+			for(Annotation an : method.getAnnotations()) {
+				System.out.println(an);
 			}
 		}
 		return null;
