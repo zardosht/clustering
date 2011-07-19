@@ -18,8 +18,7 @@ public class CreateClusterMode extends AbstractMode {
 		super("-cluster","To cluster the data set. kCluster is an integer for number of clusters:\njava -jar clustering.jar -cluster <int:kCluster>");
 	}
 	
-	@ModeExec
-	public void createCluster(int kCluster) throws Exception {
+	public void _runCreateCluster(int kCluster) throws Exception {
 		System.out.println("Start Clustering: " + new Date());
 		readData();
 		Set<String> nonUniqueKeywords = getUniqueKeywords();

@@ -55,13 +55,13 @@ public class AbstractMode {
 					return false;
 				}
 				
-				if (Integer.class.equals(clazz)) {
+				if (Integer.class.equals(clazz) || int.class.equals(clazz)) {
 					eArgs[i] = Integer.parseInt(args[i]);
-				} else if(Double.class.equals(clazz)) {
+				} else if(Double.class.equals(clazz) || double.class.equals(clazz)) {
 					eArgs[i] = Double.parseDouble(args[i]);
 				} else if(String.class.equals(clazz)) {
 					eArgs[i] = args[i];
-				} else if(Boolean.class.equals(clazz)) {
+				} else if(Boolean.class.equals(clazz) || boolean.class.equals(clazz)) {
 					eArgs[i] = Boolean.parseBoolean(args[i]);
 				} else {
 					return false;
@@ -79,14 +79,17 @@ public class AbstractMode {
 	}
 
 	private Method getModeExecMethod() {
-		// WHY AREN'T THE F!&?%$§G ANNOTATIONS NOT RECOGNIZED
 		for (Method method : getClass().getMethods()) {
+			if(method.getName().startsWith("_run")) {
+				return method;
+			}
+			// WHY AREN'T THE F!&?%$§G ANNOTATIONS NOT RECOGNIZED
 //			if (method.getAnnotation(ModeExec.class) != null) {
 //				return method;
 //			}
-			for(Annotation an : method.getAnnotations()) {
-				System.out.println(an);
-			}
+//			for(Annotation an : method.getAnnotations()) {
+//				System.out.println(an);
+//			}
 		}
 		return null;
 	}

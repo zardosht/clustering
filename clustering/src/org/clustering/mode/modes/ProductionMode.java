@@ -20,8 +20,7 @@ public class ProductionMode extends AbstractMode {
 						+ "console ;) )\njava -jar clustering.jar filmId kCluster outputKeywords");
 	}
 
-	@ModeExec
-	public void production(int filmId, int kCluster, boolean outputKeywords)
+	public void _runProduction(int filmId, int kCluster, boolean outputKeywords)
 			throws Exception {
 		production(filmId, "results/k" + kCluster + ".res", outputKeywords);
 	}

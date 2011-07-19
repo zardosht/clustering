@@ -24,8 +24,7 @@ public class EvaluateMode extends AbstractMode {
 		super("-evaluate", "To run evalutation mode use: \njava -jar clustering.jar -evaluate");
 	}
 	
-	@ModeExec
-	public void evaluate() throws Exception {
+	public void _runEvaluate() throws Exception {
 		CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"),
 				Arrays.asList("kCluster", "avgMae", "avgMse", "min", "max",
 						"numClustersWithOneElement"));
