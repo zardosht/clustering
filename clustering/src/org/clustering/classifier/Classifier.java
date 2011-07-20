@@ -20,9 +20,9 @@ public class Classifier {
 		this.items = items;
 	}
 
-	private List<Cluster> createInitialClusters() {
+	private List<Cluster> createInitialClusters(ClusterSeed seed) {
 		List<Cluster> initialClusters = new ArrayList<Cluster>();
-		Set<Item> initialCentroids = selectInitialCentroids();
+		Set<Item> initialCentroids = selectInitialCentroids(seed);
 		int id = 1;
 		for (Item centroid : initialCentroids) {
 			Cluster cluster = createCluster(id, centroid);
@@ -33,27 +33,55 @@ public class Classifier {
 	}
 
 	private Cluster createCluster(int id, Item centroid) {
-		Cluster	cluster = new Cluster(id, centroid);
+		Cluster cluster = new Cluster(id, centroid);
 		return cluster;
 	}
 
-	private Set<Item> selectInitialCentroids() {
+	private Set<Item> selectInitialCentroids(ClusterSeed seed) {
 		Set<Item> initialCentroids = new HashSet<Item>();
-		while (initialCentroids.size() < numOfClusters) {
-			int index = random.nextInt(items.size());
-			Item centroid = items.get(index);
-			initialCentroids.add(centroid);
+
+		switch (seed) {
+
+		case RANDOM:
+			while (initialCentroids.size() < numOfClusters) {
+				int index = random.nextInt(items.size());
+				Item centroid = items.get(index);
+				initialCentroids.add(centroid);
+			}
+			break;
+
+		case ICLUSTER:
+			while (initialCentroids.size() < numOfClusters) {
+				Cluster cluster = new Cluster(-1, null);
+				int i = 10;
+				while (i > 0) {
+					int index = random.nextInt(items.size());
+					Item item = items.get(index);
+					if (!cluster.contains(item)) {
+						cluster.addItem(item);
+						i--;
+					}
+				}
+				cluster.computeNewCnetroid();
+				initialCentroids.add(cluster.getCentroid());
+			}
+			break;
 		}
+
 		return initialCentroids;
 	}
 
 	public List<Cluster> createClusters() {
-		List<Cluster> clusters = createInitialClusters();
+		return createClusters(ClusterSeed.RANDOM);
+	}
+
+	public List<Cluster> createClusters(ClusterSeed seed) {
+		List<Cluster> clusters = createInitialClusters(seed);
 		do {
 			for (Item item : items) {
 				Cluster oldCluster = findCurrentCluster(item, clusters);
 				Cluster newCluster = findNewCluster(item, clusters);
-				if (oldCluster != null){
+				if (oldCluster != null) {
 					oldCluster.removeItem(item);
 				}
 				newCluster.addItem(item);
@@ -68,7 +96,8 @@ public class Classifier {
 		Cluster newCluster = null;
 		for (Cluster cluster : clusters) {
 			Item centroid = cluster.getCentroid();
-			//the distance of an item to itself is 0.0; this breaks the algorithm. Therefore filter the centroid itself.
+			// the distance of an item to itself is 0.0; this breaks the
+			// algorithm. Therefore filter the centroid itself.
 			if (item == centroid) {
 				return cluster;
 			}
@@ -98,7 +127,7 @@ public class Classifier {
 
 	private boolean centroidsChanged(List<Cluster> clusters) {
 		for (Cluster cluster : clusters) {
-			if(cluster.centroidChanged()) {
+			if (cluster.centroidChanged()) {
 				return true;
 			}
 		}
