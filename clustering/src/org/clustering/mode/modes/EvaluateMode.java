@@ -33,9 +33,9 @@ public class EvaluateMode extends AbstractMode {
 	}
 
 	private void evaluateKs(CSVWriter csvWriter) throws FileNotFoundException,
-			IOException {
+			IOException, ClassNotFoundException {
 		DataUtil dataUtil = new DataUtil();
-		dataUtil.readData();
+		dataUtil.readData(true);
 		Set<String> allKeywords = dataUtil.getAllKeywords();
 		Evaluator evaluator = new Evaluator(allKeywords,
 				DistanceTypes.JACCARD_SIMILARITY);

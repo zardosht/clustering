@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.clustering.data.FileUtil;
 import org.clustering.mode.AbstractMode;
-import org.clustering.mode.ModeExec;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 import org.clustering.util.PrintUtil;

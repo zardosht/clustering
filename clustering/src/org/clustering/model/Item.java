@@ -1,10 +1,17 @@
 package org.clustering.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Item {
+public class Item implements Serializable{
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
 	private final int itemNumber;
 	
