@@ -11,8 +11,8 @@ import java.util.Set;
 
 import org.clustering.model.Cluster;
 import org.clustering.model.DistanceTypes;
-import org.clustering.model.DistanceUtil;
 import org.clustering.model.Item;
+import org.clustering.util.DistanceUtil;
 
 /**
  * The evaluator computes different measures about clusters like max number of

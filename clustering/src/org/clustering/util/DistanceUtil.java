@@ -1,7 +1,10 @@
-package org.clustering.model;
+package org.clustering.util;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.clustering.model.DistanceTypes;
+import org.clustering.model.Item;
 
 public class DistanceUtil {
 

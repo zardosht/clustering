@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.clustering.classifier.Classifier;
+import org.clustering.data.DataUtil;
 import org.clustering.mode.AbstractMode;
 import org.clustering.mode.ModeExec;
 import org.clustering.model.Cluster;
@@ -20,15 +21,16 @@ public class CreateClusterMode extends AbstractMode {
 	
 	public void _runCreateCluster(int kCluster) throws Exception {
 		System.out.println("Start Clustering: " + new Date());
-		readData();
-		Set<String> nonUniqueKeywords = getUniqueKeywords();
-		Classifier classifier = new Classifier(kCluster, getItems());
+		DataUtil dataUtil = new DataUtil();
+		dataUtil.readData();
+		Set<String> nonUniqueKeywords = dataUtil.getUniqueKeywords();
+		Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
 
 		System.out.println("Start writing result file " + new Date());
 		
-		getFileUtil().wirteClusteringResult(
+		dataUtil.getFileUtil().wirteClusteringResult(
 				new File("results/k" + kCluster + ".res"), clusters);
 		
 		System.out.println("End writing result file " + new Date());

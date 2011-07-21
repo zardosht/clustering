@@ -12,9 +12,9 @@ import java.util.Set;
 
 import org.clustering.classifier.Classifier;
 import org.clustering.data.CSVWriter;
+import org.clustering.data.DataUtil;
 import org.clustering.evaluator.Evaluator;
 import org.clustering.mode.AbstractMode;
-import org.clustering.mode.ModeExec;
 import org.clustering.model.Cluster;
 import org.clustering.model.DistanceTypes;
 
@@ -34,14 +34,15 @@ public class EvaluateMode extends AbstractMode {
 
 	private void evaluateKs(CSVWriter csvWriter) throws FileNotFoundException,
 			IOException {
-		readData();
-		Set<String> allKeywords = getAllKeywords();
+		DataUtil dataUtil = new DataUtil();
+		dataUtil.readData();
+		Set<String> allKeywords = dataUtil.getAllKeywords();
 		Evaluator evaluator = new Evaluator(allKeywords,
 				DistanceTypes.JACCARD_SIMILARITY);
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "
 					+ new Date());
-			Classifier classifier = new Classifier(kCluster, getItems());
+			Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 			List<Cluster> clusters = classifier.createClusters();
 			writeCsvRecord(kCluster, clusters, evaluator, csvWriter);
 			System.out.println("End Clustering: " + new Date());
