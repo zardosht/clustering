@@ -103,8 +103,8 @@ public class VisualisationUtil {
 	}
 
 	/**
-	 * ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-	 * ' ' Dendrogram
+	 * '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	 * ' ' ' Dendrogram
 	 * 
 	 * @throws IOException
 	 */
@@ -113,8 +113,8 @@ public class VisualisationUtil {
 			throws IOException {
 		ArrayList<Item> items = new ArrayList<Item>(root.getItems());
 
-		int width = 1200;
-		int height = items.size() * 20;
+		final int width = 1200;
+		final int height = items.size() * 20;
 		BufferedImage bi = new BufferedImage(width, height,
 				BufferedImage.BITMASK);
 		Graphics2D g = (Graphics2D) bi.getGraphics();
@@ -129,11 +129,9 @@ public class VisualisationUtil {
 		double xAxisOffset = drawYAxis(items, g, xOffset, yOffset, yOffsetStep);
 
 		List<List<HierarchicalCluster>> levels = getLevels(root);
-
 		// get level size
 		final int levelwidth = (int) ((width - xAxisOffset - 50) / levels
 				.size());
-
 		HashMap<HierarchicalCluster, Point> middles = new HashMap<HierarchicalCluster, Point>();
 
 		int levelOffset = (int) xAxisOffset;
@@ -141,17 +139,17 @@ public class VisualisationUtil {
 		boolean newOffset = false;
 		for (List<HierarchicalCluster> level : levels) {
 			// get min, max sim for scaling
-			double minSim = 1;
-			double maxSim = 0;
-			for (HierarchicalCluster cluster : level) {
-				if (cluster.getSimLevel() < minSim) {
-					minSim = cluster.getSimLevel();
-				}
-				if (cluster.getSimLevel() > maxSim) {
-					maxSim = cluster.getSimLevel();
-				}
-			}
-			double simDiff = maxSim - minSim;
+			// double minSim = 1;
+			// double maxSim = 0;
+			// for (HierarchicalCluster cluster : level) {
+			// if (cluster.getSimLevel() < minSim) {
+			// minSim = cluster.getSimLevel();
+			// }
+			// if (cluster.getSimLevel() > maxSim) {
+			// maxSim = cluster.getSimLevel();
+			// }
+			// }
+			// double simDiff = maxSim - minSim;
 			// end
 
 			for (HierarchicalCluster cluster : level) {
@@ -171,15 +169,18 @@ public class VisualisationUtil {
 				// int cWidth = (int) (levelwidth*0.4 + 0.6*levelwidth *
 				// cluster.getSimLevel());
 				// int cWidth = (int) (levelwidth*cluster.getSimLevel());
-				int cWidth = (int) (((cluster.getSimLevel() - minSim) / simDiff)
-						* levelwidth * 0.95);
+
+				// int cWidth = (int) (((cluster.getSimLevel() - minSim) /
+				// simDiff)
+				// * levelwidth * 0.95);
 
 				Random random = new Random();
 				g.setColor(new Color(random.nextInt(256), random.nextInt(256),
 						random.nextInt(256)));
 
-				int newX = levelOffset + cWidth;
-
+//				int newX = levelOffset + cWidth;
+				int newX = (int) (xAxisOffset + 10 + cluster.getSimLevel()*width);
+				
 				g.drawLine(p1.x, p1.y, newX, p1.y);
 				g.drawLine(p2.x, p2.y, newX, p2.y);
 				g.drawLine(newX, p1.y, newX, p2.y);
@@ -193,8 +194,8 @@ public class VisualisationUtil {
 			if (newOffset) {
 				levelOffset += levelwidth;
 			}
-//			g.setColor(Color.BLACK);
-//			g.drawLine(levelOffset, 0, levelOffset, height);
+			// g.setColor(Color.BLACK);
+			// g.drawLine(levelOffset, 0, levelOffset, height);
 			ImageIO.write(bi, "PNG",
 					new File("results/hierViz/level_" + items.size() + "_"
 							+ (iL++) + ".png"));

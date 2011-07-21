@@ -16,43 +16,41 @@ public class HierarchicalClassifier {
 
 		List<HierarchicalCluster> initialClusters = createInitialClusters(items);
 
-		while (initialClusters.size() > 1) {
-			initialClusters = mergeClusters(initialClusters, similarityStrategy);
-		}
+		HierarchicalCluster rootCluster = mergeClusters(initialClusters,
+				similarityStrategy);
 
-		return initialClusters.get(0);
+		return rootCluster;
 	}
 
-	private List<HierarchicalCluster> mergeClusters(
+	private HierarchicalCluster mergeClusters(
 			List<HierarchicalCluster> initialClusters,
 			HierarchicalSimilarity similarityStrategy) {
-		ArrayList<HierarchicalCluster> nextLevel = new ArrayList<HierarchicalCluster>();
 		while (initialClusters.size() > 1) {
 			MergePair mergePair = getMergePair(initialClusters,
 					similarityStrategy);
-			HierarchicalCluster iCluster = initialClusters.get(mergePair.firsIndex);
-			HierarchicalCluster jCluster = initialClusters.get(mergePair.secondIndex);
+			HierarchicalCluster iCluster = initialClusters
+					.get(mergePair.firsIndex);
+			HierarchicalCluster jCluster = initialClusters
+					.get(mergePair.secondIndex);
 			// remove j first, because j is always behind i
 			initialClusters.remove(mergePair.secondIndex);
 			initialClusters.remove(mergePair.firsIndex);
-			nextLevel.add(new HierarchicalCluster(mergePair.sim, iCluster, jCluster));
+			initialClusters.add(new HierarchicalCluster(mergePair.sim,
+					iCluster, jCluster));
 		}
-		if (initialClusters.size() == 1) {
-			nextLevel.add(initialClusters.get(0));
-		}
-		return nextLevel;
+		return initialClusters.get(0);
 	}
 
-	private MergePair getMergePair(List<HierarchicalCluster> initialClusters,
+	private MergePair getMergePair(List<HierarchicalCluster> clusters,
 			HierarchicalSimilarity similarityStrategy) {
 		switch (similarityStrategy) {
 		case AVERAGE_INTER_SIMILARITY: {
 			int mI = 0, mJ = 0;
 			double maxSim = 0;
-			for (int i = 0; i < initialClusters.size(); i++) {
-				for (int j = i + 1; j < initialClusters.size(); j++) {
-					double similarity = getAvgInterSimilarity(
-							initialClusters.get(i), initialClusters.get(j));
+			for (int i = 0; i < clusters.size(); i++) {
+				for (int j = i + 1; j < clusters.size(); j++) {
+					double similarity = getAvgInterSimilarity(clusters.get(i),
+							clusters.get(j));
 					if (similarity > maxSim) {
 						maxSim = similarity;
 						mI = i;
@@ -70,10 +68,10 @@ public class HierarchicalClassifier {
 		case SIGLE_LINK_SIMILARITY: {
 			int mI = 0, mJ = 0;
 			double maxSim = 0;
-			for (int i = 0; i < initialClusters.size(); i++) {
-				for (int j = i + 1; j < initialClusters.size(); j++) {
+			for (int i = 0; i < clusters.size(); i++) {
+				for (int j = i + 1; j < clusters.size(); j++) {
 					double similarity = getSingleLinkSimilarity(
-							initialClusters.get(i), initialClusters.get(j));
+							clusters.get(i), clusters.get(j));
 					if (similarity > maxSim) {
 						maxSim = similarity;
 						mI = i;
@@ -90,10 +88,10 @@ public class HierarchicalClassifier {
 		case COMPLETE_LINK_SIMILARITY: {
 			int mI = 0, mJ = 0;
 			double minSim = Double.MAX_VALUE;
-			for (int i = 0; i < initialClusters.size(); i++) {
-				for (int j = i + 1; j < initialClusters.size(); j++) {
+			for (int i = 0; i < clusters.size(); i++) {
+				for (int j = i + 1; j < clusters.size(); j++) {
 					double similarity = getCompleteLinkSimilarity(
-							initialClusters.get(i), initialClusters.get(j));
+							clusters.get(i), clusters.get(j));
 					if (similarity < minSim) {
 						minSim = similarity;
 						mI = i;
@@ -128,8 +126,10 @@ public class HierarchicalClassifier {
 
 	private double getCompleteLinkSimilarity(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		//Complete link similarity is the similarity of the most dissimilar elements in two clusters
-		//therefore the complete link distnace if the distance of the two most apart elements
+		// Complete link similarity is the similarity of the most dissimilar
+		// elements in two clusters
+		// therefore the complete link distnace if the distance of the two most
+		// apart elements
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
