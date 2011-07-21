@@ -4,7 +4,7 @@
    centroid of i randomly selected vectors)
 3. Find good combinations of distance function and K. 
 4. Visualize results from step 3
-5. Implement hierarchical clustering and visualize its results
+5. Implement hierarchical clustering and visualize its results 
 6. (nice to have) Implement text categorization and visualize its results. 
 7. Creates slides for presentation.
 

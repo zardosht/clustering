@@ -27,7 +27,7 @@ public class EvaluateMode extends AbstractMode {
 	public void _runEvaluate() throws Exception {
 		CSVWriter csvWriter = new CSVWriter(new File("./results/results.csv"),
 				Arrays.asList("kCluster", "avgMae", "avgMse", "min", "max",
-						"numClustersWithOneElement"));
+						"numClustersWithOneElement", "RSS", "numRuns"));
 		evaluateKs(csvWriter);
 		csvWriter.close();
 	}
@@ -44,26 +44,38 @@ public class EvaluateMode extends AbstractMode {
 					+ new Date());
 			Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 			List<Cluster> clusters = classifier.createClusters();
-			writeCsvRecord(kCluster, clusters, evaluator, csvWriter);
+			int numRuns = classifier.getNumRuns();
+			writeCsvRecord(kCluster, clusters, numRuns, evaluator, csvWriter);
 			System.out.println("End Clustering: " + new Date());
 		}
 	}
 	
 	private void writeCsvRecord(int kCluster, List<Cluster> clusters,
-			Evaluator evaluator, CSVWriter csvWriter) {
+			int numRuns, Evaluator evaluator, CSVWriter csvWriter) {
 		Map<String, Object> csvRecord = new HashMap<String, Object>();
 		csvRecord.put("kCluster", kCluster);
+	
 		Double avgMae = evaluator.getAvgMeanAbsoluteError(clusters);
 		csvRecord.put("avgMae", avgMae);
+		
 		Double avgMse = evaluator.getAvgMeanSquaredError(clusters);
 		csvRecord.put("avgMse", avgMse);
+		
 		int min = evaluator.getMinItemPerCluster(clusters);
 		csvRecord.put("min", min);
+		
 		int max = evaluator.getMaxItemPerCluster(clusters);
 		csvRecord.put("max", max);
+		
 		int numClustersWithOneElement = evaluator
 				.getNumClustersWithOneElements(clusters);
 		csvRecord.put("numClustersWithOneElement", numClustersWithOneElement);
+		
+		double rss = evaluator.getRSS(clusters);
+		csvRecord.put("RSS", rss);
+		
+		csvRecord.put("numRuns", numRuns);
+		
 		csvWriter.writeRecord(csvRecord);
 	}
 	

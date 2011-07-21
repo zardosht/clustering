@@ -14,6 +14,7 @@ public class Classifier {
 	private final int numOfClusters;
 	private final List<Item> items;
 	private Random random = new Random();
+	private int numRuns;
 
 	public Classifier(int numOfClusters, List<Item> items) {
 		this.numOfClusters = numOfClusters;
@@ -77,6 +78,7 @@ public class Classifier {
 
 	public List<Cluster> createClusters(ClusterSeed seed) {
 		List<Cluster> clusters = createInitialClusters(seed);
+		numRuns = 0;
 		do {
 			for (Item item : items) {
 				Cluster oldCluster = findCurrentCluster(item, clusters);
@@ -87,8 +89,13 @@ public class Classifier {
 				newCluster.addItem(item);
 			}
 			computeNewCentroids(clusters);
+			numRuns++;
 		} while (centroidsChanged(clusters));
 		return clusters;
+	}
+
+	public int getNumRuns() {
+		return numRuns;
 	}
 
 	private Cluster findNewCluster(Item item, List<Cluster> clusters) {
