@@ -32,10 +32,10 @@ public class DataUtil {
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
 
-		System.out.println("Starting Visualisation: " + new Date());
-		new VisualisationUtil(nonUniqueKeywords,
-				"results/items_before_clustering.png").drawItems(items);
-		System.out.println("End Visualisation: " + new Date());
+//		System.out.println("Starting Visualisation: " + new Date());
+//		new VisualisationUtil(nonUniqueKeywords,
+//				"results/items_before_clustering.png").drawItems(items);
+//		System.out.println("End Visualisation: " + new Date());
 
 		System.out.println("Starting calcDistance: " + new Date());
 		calcDistances(items, nonUniqueKeywords);

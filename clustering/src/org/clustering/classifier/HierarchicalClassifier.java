@@ -1,7 +1,6 @@
 package org.clustering.classifier;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.clustering.model.HierarchicalCluster;
