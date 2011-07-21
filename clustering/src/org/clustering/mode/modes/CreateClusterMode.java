@@ -23,7 +23,7 @@ public class CreateClusterMode extends AbstractMode {
 		System.out.println("Start Clustering: " + new Date());
 		DataUtil dataUtil = new DataUtil();
 		dataUtil.readData();
-		Set<String> nonUniqueKeywords = dataUtil.getUniqueKeywords();
+		Set<String> nonUniqueKeywords = dataUtil.getNonUniqueKeywords();
 		Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());

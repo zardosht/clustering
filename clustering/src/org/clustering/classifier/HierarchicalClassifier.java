@@ -22,7 +22,7 @@ public class HierarchicalClassifier {
 
 	private List<HierarchicalCluster> mergeClusters(
 			List<HierarchicalCluster> initialClusters) {
-		ArrayList<HierarchicalCluster> list = new ArrayList<HierarchicalCluster>();
+		ArrayList<HierarchicalCluster> nextLevel = new ArrayList<HierarchicalCluster>();
 		while (initialClusters.size() > 1) {
 			int mI = 0, mJ = 0;
 			double maxSim = 0;
@@ -42,12 +42,12 @@ public class HierarchicalClassifier {
 			// remove j first, because j is always behind i
 			initialClusters.remove(mJ);
 			initialClusters.remove(mI);
-			list.add(new HierarchicalCluster(maxSim, iCluster, jCluster));
+			nextLevel.add(new HierarchicalCluster(maxSim, iCluster, jCluster));
 		}
 		if(initialClusters.size() == 1) {
-			list.add(initialClusters.get(0));
+			nextLevel.add(initialClusters.get(0));
 		}
-		return list;
+		return nextLevel;
 	}
 
 	private double getSimilarity(HierarchicalCluster c1,

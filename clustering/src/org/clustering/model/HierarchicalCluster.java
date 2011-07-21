@@ -10,6 +10,22 @@ public class HierarchicalCluster {
 	private HierarchicalCluster secondChild;
 	private HierarchicalCluster parent;
 
+	public double getSimLevel() {
+		return simLevel;
+	}
+
+	public HierarchicalCluster getFirstChild() {
+		return firstChild;
+	}
+
+	public HierarchicalCluster getSecondChild() {
+		return secondChild;
+	}
+
+	public HierarchicalCluster getParent() {
+		return parent;
+	}
+
 	public HierarchicalCluster(Item initialCentoroid) {
 		this.item = initialCentoroid;
 		simLevel = 1;
