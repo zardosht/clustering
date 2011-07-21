@@ -29,9 +29,10 @@ public class HierarchicalCluster {
 		this.parent = hierarchicalCluster;
 	}
 	
-	public void getItems() {
+	public HashSet<Item> getItems() {
 		HashSet<Item> children = new HashSet<Item>();
 		getChildren(children);
+		return children;
 	}
 
 	private void getChildren(HashSet<Item> children) {
