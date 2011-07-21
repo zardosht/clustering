@@ -2,6 +2,7 @@ package org.clustering.mode.modes;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +35,8 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		System.out.println("items in first child: " + root.getFirstChild().getItems());
 		System.out.println("items in second child: " + root.getSecondChild().getItems());
 		
-		
+		VisualisationUtil util = new VisualisationUtil(new HashSet<String>(), "C:/Users/Otto/Desktop/bla.png");
+		util.drawHierarchicalCluster(root);
 		
 	}
 	

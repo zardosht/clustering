@@ -25,6 +25,7 @@ public class DataUtil {
 		fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
 		items = fileUtil.getItems();
+		items = items.subList(0, 50);
 		filter(items);
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
