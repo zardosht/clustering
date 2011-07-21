@@ -60,4 +60,8 @@ public class HierarchicalCluster {
 		secondChild.getChildren(children);
 	}
 
+	public Item getItem() {
+		return item;
+	}
+
 }

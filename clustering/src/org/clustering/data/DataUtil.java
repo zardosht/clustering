@@ -31,6 +31,7 @@ public class DataUtil {
 		fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
 		items = fileUtil.getItems();
+		items = items.subList(0, 50);
 		filter(items);
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
@@ -38,10 +39,10 @@ public class DataUtil {
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
 
-		System.out.println("Starting Visualisation: " + new Date());
-		new VisualisationUtil(nonUniqueKeywords,
-				"results/items_before_clustering.png").drawItems(items);
-		System.out.println("End Visualisation: " + new Date());
+//		System.out.println("Starting Visualisation: " + new Date());
+//		new VisualisationUtil(nonUniqueKeywords,
+//				"results/items_before_clustering.png").drawItems(items);
+//		System.out.println("End Visualisation: " + new Date());
 
 		if(calcDistancesNew){
 			System.out.println("Starting calcDistance: " + new Date());
