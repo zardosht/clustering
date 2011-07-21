@@ -166,12 +166,6 @@ public class VisualisationUtil {
 				Point p1 = middles.get(cluster.getFirstChild());
 				Point p2 = middles.get(cluster.getSecondChild());
 
-				// int cWidth = (int) ((levelwidth *
-				// Math.pow(cluster.getSimLevel(),2))/1);
-				// int cWidth = (int) (levelwidth*0.4 + 0.6*levelwidth *
-				// cluster.getSimLevel());
-				// int cWidth = (int) (levelwidth*cluster.getSimLevel());
-
 				// int cWidth = (int) (((cluster.getSimLevel() - minSim) /
 				// simDiff)
 				// * levelwidth * 0.95);
@@ -181,7 +175,8 @@ public class VisualisationUtil {
 						random.nextInt(256)));
 
 //				int newX = levelOffset + cWidth;
-				int newX = (int) (xAxisOffset + 10 + cluster.getSimLevel()*width);
+				double offs = xAxisOffset;
+				int newX = (int) (offs + 10 + (1-cluster.getSimLevel())*(width-offs));
 				
 				g.drawLine(p1.x, p1.y, newX, p1.y);
 				g.drawLine(p2.x, p2.y, newX, p2.y);
