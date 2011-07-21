@@ -23,7 +23,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 		HierarchicalCluster root = classifier.createHierarchicalCluster(
 				dataUtil.getItems(),
-				HierarchicalSimilarity.COMPLETE_LINK_SIMILARITY);
+				HierarchicalSimilarity.AVERAGE_INTER_SIMILARITY);
 		System.out.println("End hierarchical clustering: " + new Date());
 
 		System.out.println("Start writing result file " + new Date());

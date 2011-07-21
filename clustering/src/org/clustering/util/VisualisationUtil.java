@@ -16,11 +16,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.clustering.data.FileUtil;
 import org.clustering.model.Cluster;
 import org.clustering.model.HierarchicalCluster;
 import org.clustering.model.Item;
@@ -207,22 +209,32 @@ public class VisualisationUtil {
 
 	private double drawYAxis(ArrayList<Item> items, Graphics2D g, int xOffset,
 			int yOffset, int yOffsetStep) {
+		
+		int maxWidth = 150;
+		Map<Integer, String> movies = null;
+		try {
+			movies = FileUtil.importMoviesFromFile("data/u.item");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		g.setColor(Color.BLACK);
 		Font font = new Font("Arial", 0, 10);
+		yOffset += 5;
 		double gwidth = 0;
 		for (Item item : items) {
 			GlyphVector glyphVector = font.createGlyphVector(
 					new FontRenderContext(null, true, true),
-					"" + item.getItemNumber());
+					movies.get(item.getItemNumber()));
 			double w = glyphVector.getVisualBounds().getWidth();
 			if (w > gwidth)
 				gwidth = w;
+			g.clipRect(0, 0, maxWidth, yOffset+40);
 			g.drawGlyphVector(glyphVector, xOffset, yOffset);
 			yOffset += yOffsetStep;
+			g.setClip(null);
 		}
-		double offset = xOffset * 2 + gwidth;
+		double offset = Math.min(xOffset * 2 + gwidth,maxWidth);
 		g.fillRect((int) offset, 0, 1, yOffset);
-
 		return offset + xOffset;
 	}
 
