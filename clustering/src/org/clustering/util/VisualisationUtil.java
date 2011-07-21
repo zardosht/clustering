@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -101,7 +103,8 @@ public class VisualisationUtil {
 	}
 
 	/**
-	 * Dendrogram
+	 * ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	 * ' ' Dendrogram
 	 * 
 	 * @throws IOException
 	 */
@@ -110,10 +113,10 @@ public class VisualisationUtil {
 			throws IOException {
 		ArrayList<Item> items = new ArrayList<Item>(root.getItems());
 
-		int width = 300;
-		int height = 50 * 25;
+		int width = 1200;
+		int height = items.size() * 20;
 		BufferedImage bi = new BufferedImage(width, height,
-				BufferedImage.TYPE_BYTE_BINARY);
+				BufferedImage.BITMASK);
 		Graphics2D g = (Graphics2D) bi.getGraphics();
 
 		g.setColor(Color.WHITE);
@@ -125,53 +128,76 @@ public class VisualisationUtil {
 
 		double xAxisOffset = drawYAxis(items, g, xOffset, yOffset, yOffsetStep);
 
-		final int levelwidth = 50;
-
 		List<List<HierarchicalCluster>> levels = getLevels(root);
 
-		HashMap<HierarchicalCluster, Integer> middles = new HashMap<HierarchicalCluster, Integer>();
-		// FIRST LEVEL
-		for (HierarchicalCluster cluster : levels.get(0)) {
-			Item item1 = cluster.getFirstChild().getItem();
-			Item item2 = cluster.getSecondChild().getItem();
+		// get level size
+		final int levelwidth = (int) ((width - xAxisOffset - 50) / levels
+				.size());
 
-			int index1 = items.indexOf(item1);
-			int index2 = items.indexOf(item2);
+		HashMap<HierarchicalCluster, Point> middles = new HashMap<HierarchicalCluster, Point>();
 
-			int cWidth = (int) (cluster.getSimLevel() * levelwidth);
-
-			int y = yOffset + (index1 * yOffsetStep);
-			int y2 = yOffset + (index2 * yOffsetStep);
-			g.fillRect((int) xAxisOffset, y, cWidth, 1);
-			g.fillRect((int) xAxisOffset, y2, cWidth, 1);
-			g.fillRect((int) (xAxisOffset + cWidth), Math.min(y, y2), 1,
-					Math.abs(y - y2));
-			middles.put(cluster, (Math.min(y, y2) + (Math.abs(y - y2) / 2)));
-		}
-
-		int levelOffset = (int) (levelwidth + xAxisOffset);
-		for (List<HierarchicalCluster> level : levels.subList(1,
-				levels.size() - 1)) {
+		int levelOffset = (int) xAxisOffset;
+		int iL = 1;
+		boolean newOffset = false;
+		for (List<HierarchicalCluster> level : levels) {
+			// get min, max sim for scaling
+			double minSim = 1;
+			double maxSim = 0;
 			for (HierarchicalCluster cluster : level) {
-				HierarchicalCluster first = cluster.getFirstChild();
-				HierarchicalCluster second = cluster.getSecondChild();
-				try {
-					int y1 = middles.get(first);
-					int y2 = middles.get(second);
-				int cWidth = (int) (levelOffset + (50 * cluster.getSimLevel()));
-
-				g.drawLine(levelOffset, y1, cWidth, y1);
-				g.drawLine(levelOffset, y2, cWidth, y2);
-				g.drawLine(cWidth, y1, cWidth, y2);
-
-				middles.put(cluster,
-						(Math.min(y1, y2) + (Math.abs(y1 - y2) / 2)));
-				
-				} catch (NullPointerException e) {
-					continue;
+				if (cluster.getSimLevel() < minSim) {
+					minSim = cluster.getSimLevel();
+				}
+				if (cluster.getSimLevel() > maxSim) {
+					maxSim = cluster.getSimLevel();
 				}
 			}
-			levelOffset += levelwidth;
+			double simDiff = maxSim - minSim;
+			// end
+
+			for (HierarchicalCluster cluster : level) {
+				// If leave
+				if (cluster.getItem() != null) {
+					Item item1 = cluster.getItem();
+					int index1 = items.indexOf(item1);
+					int y = yOffset + (index1 * yOffsetStep);
+					middles.put(cluster, new Point((int) xAxisOffset, y));
+					continue;
+				}
+				Point p1 = middles.get(cluster.getFirstChild());
+				Point p2 = middles.get(cluster.getSecondChild());
+
+				// int cWidth = (int) ((levelwidth *
+				// Math.pow(cluster.getSimLevel(),2))/1);
+				// int cWidth = (int) (levelwidth*0.4 + 0.6*levelwidth *
+				// cluster.getSimLevel());
+				// int cWidth = (int) (levelwidth*cluster.getSimLevel());
+				int cWidth = (int) (((cluster.getSimLevel() - minSim) / simDiff)
+						* levelwidth * 0.95);
+
+				Random random = new Random();
+				g.setColor(new Color(random.nextInt(256), random.nextInt(256),
+						random.nextInt(256)));
+
+				int newX = levelOffset + cWidth;
+
+				g.drawLine(p1.x, p1.y, newX, p1.y);
+				g.drawLine(p2.x, p2.y, newX, p2.y);
+				g.drawLine(newX, p1.y, newX, p2.y);
+
+				middles.put(cluster, new Point(newX,
+						(Math.min(p1.y, p2.y) + (Math.abs(p1.y - p2.y) / 2))));
+				newOffset = true;
+
+			}
+			// new offset only if something has been drawn
+			if (newOffset) {
+				levelOffset += levelwidth;
+			}
+//			g.setColor(Color.BLACK);
+//			g.drawLine(levelOffset, 0, levelOffset, height);
+			ImageIO.write(bi, "PNG",
+					new File("results/hierViz/level_" + items.size() + "_"
+							+ (iL++) + ".png"));
 		}
 
 		// Store the image using the PNG format.
@@ -212,13 +238,15 @@ public class VisualisationUtil {
 
 	private void addToLevel(List<List<HierarchicalCluster>> levels, int i,
 			HierarchicalCluster node) {
-		if (node != null && node.getItem() == null) {
+		if (node != null) {
 			if (levels.size() == i) {
 				levels.add(new ArrayList<HierarchicalCluster>());
 			}
 			levels.get(i).add(node);
-			addToLevel(levels, i + 1, node.getFirstChild());
-			addToLevel(levels, i + 1, node.getSecondChild());
+			if (node.getItem() == null) {
+				addToLevel(levels, i + 1, node.getFirstChild());
+				addToLevel(levels, i + 1, node.getSecondChild());
+			}
 		}
 	}
 }
