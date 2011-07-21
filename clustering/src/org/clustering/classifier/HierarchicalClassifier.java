@@ -21,7 +21,7 @@ public class HierarchicalClassifier {
 
 	private List<HierarchicalCluster> mergeClusters(
 			List<HierarchicalCluster> initialClusters) {
-		ArrayList<HierarchicalCluster> list = new ArrayList<HierarchicalCluster>();
+		ArrayList<HierarchicalCluster> nextLevel = new ArrayList<HierarchicalCluster>();
 		while (initialClusters.size() > 1) {
 			int mI = 0, mJ = 0;
 			double maxSim = 0;
@@ -41,17 +41,40 @@ public class HierarchicalClassifier {
 			// remove j first, because j is always behind i
 			initialClusters.remove(mJ);
 			initialClusters.remove(mI);
-			list.add(new HierarchicalCluster(maxSim, iCluster, jCluster));
+			nextLevel.add(new HierarchicalCluster(maxSim, iCluster, jCluster));
 		}
 		if(initialClusters.size() == 1) {
-			list.add(initialClusters.get(0));
+			nextLevel.add(initialClusters.get(0));
 		}
-		return list;
+		return nextLevel;
 	}
 
-	private double getSimilarity(HierarchicalCluster firstCluster,
-			HierarchicalCluster secondCluster) {
-		return 0;
+	private double getSimilarity(HierarchicalCluster c1,
+			HierarchicalCluster c2) {
+		//compare average inter distance
+		double avgInterDistC1C2= getAvgInterDistance(c1, c2);
+		
+		return avgInterDistC1C2;
+	}
+
+	private double getAvgInterDistance(HierarchicalCluster c1, HierarchicalCluster c2) {
+		//for each item in C1 get its average distance to elements in C2
+		//the distance of C1 to C2 is then average of these average distance. 
+		HashSet<Item> itemsC1 = c1.getItems();
+		HashSet<Item> itemsC2 = c2.getItems();
+		
+		double sumAvgDist = 0.0;
+		double avgInterDist = 0.0;
+		for(Item item1 : itemsC1){
+			double sumItem = 0.0;
+			for(Item item2 : itemsC2){
+				sumItem += item1.getDistance(item2);
+			}
+			sumAvgDist += sumItem / itemsC2.size();
+		}
+		
+		avgInterDist = sumAvgDist / itemsC1.size();
+		return avgInterDist;
 	}
 
 	private List<HierarchicalCluster> createInitialClusters(List<Item> items) {

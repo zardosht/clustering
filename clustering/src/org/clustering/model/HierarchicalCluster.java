@@ -10,6 +10,22 @@ public class HierarchicalCluster {
 	private HierarchicalCluster secondChild;
 	private HierarchicalCluster parent;
 
+	public double getSimLevel() {
+		return simLevel;
+	}
+
+	public HierarchicalCluster getFirstChild() {
+		return firstChild;
+	}
+
+	public HierarchicalCluster getSecondChild() {
+		return secondChild;
+	}
+
+	public HierarchicalCluster getParent() {
+		return parent;
+	}
+
 	public HierarchicalCluster(Item initialCentoroid) {
 		this.item = initialCentoroid;
 		simLevel = 1;
@@ -29,9 +45,10 @@ public class HierarchicalCluster {
 		this.parent = hierarchicalCluster;
 	}
 	
-	public void getItems() {
+	public HashSet<Item> getItems() {
 		HashSet<Item> children = new HashSet<Item>();
 		getChildren(children);
+		return children;
 	}
 
 	private void getChildren(HashSet<Item> children) {
