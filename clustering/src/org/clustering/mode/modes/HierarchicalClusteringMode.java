@@ -18,7 +18,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 	
 	public void _runCreateCluster() throws Exception {
 		DataUtil dataUtil = new DataUtil();
-		dataUtil.readData(false);
+		dataUtil.readData(true);
 		System.out.println("Start hierarchical clustering: " + new Date());
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 		HierarchicalCluster root = classifier.createHierarchicalCluster(dataUtil.getItems());
@@ -28,7 +28,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		System.out.println("Items in root: " + root.getItems().size());
 		System.out.println("items in first child: " + root.getFirstChild().getItems());
 		
-		VisualisationUtil util = new VisualisationUtil(new HashSet<String>(), "C:/Users/Otto/Desktop/bla.png");
+		VisualisationUtil util = new VisualisationUtil(new HashSet<String>(), "results/hierarchical_clusters.png");
 		util.drawHierarchicalCluster(root);
 		
 	}

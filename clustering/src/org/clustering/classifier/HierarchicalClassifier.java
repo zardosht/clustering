@@ -54,8 +54,11 @@ public class HierarchicalClassifier {
 			HierarchicalCluster c2) {
 		//compare average inter distance
 		double avgInterDistC1C2= getAvgInterDistance(c1, c2);
+		return 1.0 - avgInterDistC1C2;
 		
-		return avgInterDistC1C2;
+		//double completeLinkSimilarity = getComple
+		
+		
 	}
 
 	private double getAvgInterDistance(HierarchicalCluster c1, HierarchicalCluster c2) {
