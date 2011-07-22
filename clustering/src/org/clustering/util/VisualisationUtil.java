@@ -125,35 +125,22 @@ public class VisualisationUtil {
 		g.fillRect(0, 0, width, height);
 
 		final int xOffset = 10;
-		final int yOffset = 10;
+		final int yOffset = 25;
 		final int yOffsetStep = 15;
 
 		double xAxisOffset = drawYAxis(items, g, xOffset, yOffset, yOffsetStep);
-
+		int start = (int) xAxisOffset+xOffset;
+		int end = (int) (width-10-xAxisOffset);
+		drawXAxis(g, start, end, yOffset);
+		
 		List<List<HierarchicalCluster>> levels = getLevels(root);
 //		// get level size
 //		final int levelwidth = (int) ((width - xAxisOffset - 50) / levels
 //				.size());
 		HashMap<HierarchicalCluster, Point> middles = new HashMap<HierarchicalCluster, Point>();
 
-		int levelOffset = (int) xAxisOffset;
 		int iL = 1;
-		boolean newOffset = false;
 		for (List<HierarchicalCluster> level : levels) {
-			// get min, max dist for scaling
-			// double minSim = 1;
-			// double maxSim = 0;
-			// for (HierarchicalCluster cluster : level) {
-			// if (cluster.getSimLevel() < minSim) {
-			// minSim = cluster.getSimLevel();
-			// }
-			// if (cluster.getSimLevel() > maxSim) {
-			// maxSim = cluster.getSimLevel();
-			// }
-			// }
-			// double simDiff = maxSim - minSim;
-			// end
-
 			for (HierarchicalCluster cluster : level) {
 				// If leave
 				if (cluster.getItem() != null) {
@@ -174,9 +161,7 @@ public class VisualisationUtil {
 				g.setColor(new Color(random.nextInt(256), random.nextInt(256),
 						random.nextInt(256)));
 
-//				int newX = levelOffset + cWidth;
-				double offs = xAxisOffset;
-				int newX = (int) (offs + 10 + (1-cluster.getDistance())*(width-offs));
+				int newX = getX(start,end, cluster.getDistance());
 				
 				g.drawLine(p1.x, p1.y, newX, p1.y);
 				g.drawLine(p2.x, p2.y, newX, p2.y);
@@ -184,15 +169,7 @@ public class VisualisationUtil {
 
 				middles.put(cluster, new Point(newX,
 						(Math.min(p1.y, p2.y) + (Math.abs(p1.y - p2.y) / 2))));
-				newOffset = true;
-
 			}
-			// new offset only if something has been drawn
-			// if (newOffset) {
-			// levelOffset += levelwidth;
-			// }
-			// g.setColor(Color.BLACK);
-			// g.drawLine(levelOffset, 0, levelOffset, height);
 			ImageIO.write(bi, "PNG",
 					new File("results/hierViz/level_" + items.size() + "_"
 							+ (iL++) + ".png"));
@@ -200,6 +177,27 @@ public class VisualisationUtil {
 
 		// Store the image using the PNG format.
 		ImageIO.write(bi, "PNG", new File(filename));
+	}
+
+	private int getX(int start, int end, double distance) {
+		return (int) ((end-start)*distance + start);
+	}
+	
+	private void drawXAxis(Graphics2D g, int start, int end, int yOffset) {
+		yOffset -= 5;
+		g.drawLine(start, yOffset, end, yOffset);
+		
+		drawScale(g, getX(start,end,0.0), yOffset,"0.0");
+		drawScale(g, getX(start,end,0.2), yOffset,"0.2");
+		drawScale(g, getX(start,end,0.4), yOffset,"0.4");
+		drawScale(g, getX(start,end,0.6), yOffset,"0.6");
+		drawScale(g, getX(start,end,0.8), yOffset,"0.8");
+		drawScale(g, getX(start,end,1.0), yOffset,"1.0");
+	}
+
+	private void drawScale(Graphics2D g, int start, int yOffset, String str) {
+		g.drawLine(start,yOffset,start,yOffset-3);
+		g.drawString(str, start-7, yOffset-6);
 	}
 
 	private double drawYAxis(ArrayList<Item> items, Graphics2D g, int xOffset,
