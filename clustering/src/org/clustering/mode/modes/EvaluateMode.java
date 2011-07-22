@@ -32,8 +32,7 @@ public class EvaluateMode extends AbstractMode {
 		csvWriter.close();
 	}
 
-	private void evaluateKs(CSVWriter csvWriter) throws FileNotFoundException,
-			IOException, ClassNotFoundException {
+	private void evaluateKs(CSVWriter csvWriter) throws Exception {
 		DataUtil dataUtil = new DataUtil();
 		dataUtil.readData(true);
 		Set<String> allKeywords = dataUtil.getAllKeywords();
