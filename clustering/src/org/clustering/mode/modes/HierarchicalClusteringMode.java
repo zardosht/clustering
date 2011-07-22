@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import org.clustering.classifier.HierarchicalClassifier;
-import org.clustering.classifier.HierarchicalSimilarity;
+import org.clustering.classifier.HierarchicalAlgorithm;
 import org.clustering.data.DataUtil;
 import org.clustering.mode.AbstractMode;
 import org.clustering.model.HierarchicalCluster;
@@ -23,7 +23,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 		HierarchicalCluster root = classifier.createHierarchicalCluster(
 				dataUtil.getItems(),
-				HierarchicalSimilarity.AVERAGE_INTER_SIMILARITY);
+				HierarchicalAlgorithm.AVERAGE_LINK_DISTANCE);
 		System.out.println("End hierarchical clustering: " + new Date());
 
 		System.out.println("Start writing result file " + new Date());

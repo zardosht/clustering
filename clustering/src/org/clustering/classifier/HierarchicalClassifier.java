@@ -10,7 +10,7 @@ import org.clustering.model.Item;
 public class HierarchicalClassifier {
 
 	public HierarchicalCluster createHierarchicalCluster(List<Item> items,
-			HierarchicalSimilarity similarityStrategy) {
+			HierarchicalAlgorithm similarityStrategy) {
 
 		List<HierarchicalCluster> initialClusters = createInitialClusters(items);
 
@@ -22,7 +22,7 @@ public class HierarchicalClassifier {
 
 	private HierarchicalCluster mergeClusters(
 			List<HierarchicalCluster> initialClusters,
-			HierarchicalSimilarity similarityStrategy) {
+			HierarchicalAlgorithm similarityStrategy) {
 		while (initialClusters.size() > 1) {
 			MergePair mergePair = getMergePair(initialClusters,
 					similarityStrategy);
@@ -33,21 +33,21 @@ public class HierarchicalClassifier {
 			// remove j first, because j is always behind i
 			initialClusters.remove(mergePair.secondIndex);
 			initialClusters.remove(mergePair.firsIndex);
-			initialClusters.add(new HierarchicalCluster(mergePair.sim,
+			initialClusters.add(new HierarchicalCluster(mergePair.dist,
 					iCluster, jCluster));
 		}
 		return initialClusters.get(0);
 	}
 
 	private MergePair getMergePair(List<HierarchicalCluster> clusters,
-			HierarchicalSimilarity similarityStrategy) {
+			HierarchicalAlgorithm similarityStrategy) {
 		switch (similarityStrategy) {
-		case AVERAGE_INTER_SIMILARITY: {
+		case AVERAGE_LINK_DISTANCE: {
 			int mI = 0, mJ = 0;
 			double maxSim = 0;
 			for (int i = 0; i < clusters.size(); i++) {
 				for (int j = i + 1; j < clusters.size(); j++) {
-					double similarity = getAvgInterSimilarity(clusters.get(i),
+					double similarity = getAvgLinkDistance(clusters.get(i),
 							clusters.get(j));
 					if (similarity > maxSim) {
 						maxSim = similarity;
@@ -59,19 +59,20 @@ public class HierarchicalClassifier {
 			MergePair mergePair = new MergePair();
 			mergePair.firsIndex = mI;
 			mergePair.secondIndex = mJ;
-			mergePair.sim = maxSim;
+			mergePair.dist = maxSim;
 			return mergePair;
 
 		}
-		case SIGLE_LINK_SIMILARITY: {
+		case SIGLE_LINK_DISTANCE: {
+			//merge the two clusters with the smallest minimum pairwise distance
 			int mI = 0, mJ = 0;
-			double maxSim = 0;
+			double minDist = Double.MAX_VALUE;
 			for (int i = 0; i < clusters.size(); i++) {
 				for (int j = i + 1; j < clusters.size(); j++) {
-					double similarity = getSingleLinkSimilarity(
+					double dist = getSingleLinkDistance(
 							clusters.get(i), clusters.get(j));
-					if (similarity > maxSim) {
-						maxSim = similarity;
+					if (dist < minDist) {
+						minDist = dist;
 						mI = i;
 						mJ = j;
 					}
@@ -80,18 +81,19 @@ public class HierarchicalClassifier {
 			MergePair mergePair = new MergePair();
 			mergePair.firsIndex = mI;
 			mergePair.secondIndex = mJ;
-			mergePair.sim = maxSim;
+			mergePair.dist = minDist;
 			return mergePair;
 		}
-		case COMPLETE_LINK_SIMILARITY: {
+		case COMPLETE_LINK_DISTANCE: {
+			//merge clusters with the "smallest" "maximum pairwise distance"
 			int mI = 0, mJ = 0;
-			double minSim = Double.MAX_VALUE;
+			double minDist = Double.MAX_VALUE;
 			for (int i = 0; i < clusters.size(); i++) {
 				for (int j = i + 1; j < clusters.size(); j++) {
-					double similarity = getCompleteLinkSimilarity(
+					double dist = getCompleteLinkDistance(
 							clusters.get(i), clusters.get(j));
-					if (similarity < minSim) {
-						minSim = similarity;
+					if (dist < minDist) {
+						minDist = dist;
 						mI = i;
 						mJ = j;
 					}
@@ -100,7 +102,7 @@ public class HierarchicalClassifier {
 			MergePair mergePair = new MergePair();
 			mergePair.firsIndex = mI;
 			mergePair.secondIndex = mJ;
-			mergePair.sim = minSim;
+			mergePair.dist = minDist;
 			return mergePair;
 		}
 		}
@@ -108,48 +110,31 @@ public class HierarchicalClassifier {
 		return null;
 	}
 
-	private double getSingleLinkSimilarity(HierarchicalCluster c1,
-			HierarchicalCluster c2) {
-		// single link distance
-		double singleLinkDistance = getSingleLinkDistance(c1, c2);
-		return 1.0 - singleLinkDistance;
-	}
 
-	private double getAvgInterSimilarity(HierarchicalCluster c1,
+	private double getCompleteLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		// compare average inter distance
-		double avgInterDistC1C2 = getAvgInterDistance(c1, c2);
-		return 1.0 - avgInterDistC1C2;
-	}
-
-	private double getCompleteLinkSimilarity(HierarchicalCluster c1,
-			HierarchicalCluster c2) {
-		// Complete link similarity is the similarity of the most dissimilar
-		// elements in two clusters
-		// therefore the complete link distnace if the distance of the two most
-		// apart elements
+		//merge clusters with the "smallest" "maximum pairwise distance"
+		//return maximum pairwise distance 
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
-		double maxDis = 0.0;
+		double maxDist = 0.0;
 		for (Item item1 : itemsC1) {
 			for (Item item2 : itemsC2) {
 				double distance = item1.getDistance(item2);
-				if (distance > maxDis) {
-					maxDis = distance;
+				if (distance > maxDist) {
+					maxDist = distance;
 				}
 			}
 		}
 
-		return 1.0 - maxDis;
+		return maxDist;
 	}
 
 	private double getSingleLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		// single link similarity is the similarity of the most similar elements
-		// inside two clusters.
-		// therefore single link distance will be distance of the most close
-		// elements
+		//merge the two clusters with the smallest minimum pairwise distance
+		//return minimum pairwise distance
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
@@ -166,25 +151,24 @@ public class HierarchicalClassifier {
 		return minDist;
 	}
 
-	private double getAvgInterDistance(HierarchicalCluster c1,
+	private double getAvgLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		// for each item in C1 get its average distance to elements in C2
-		// the distance of C1 to C2 is then average of these average distance.
+		//merge the two clusters with the smallest average distance between any two points in the clusters 
+		//return average distance between each two point in two clusters.
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
-		double sumAvgDist = 0.0;
-		double avgInterDist = 0.0;
+		double sumDist = 0.0;
+		int n = 0;
 		for (Item item1 : itemsC1) {
-			double sumItem = 0.0;
 			for (Item item2 : itemsC2) {
-				sumItem += item1.getDistance(item2);
+				sumDist += item1.getDistance(item2);
+				n++;
 			}
-			sumAvgDist += sumItem / itemsC2.size();
 		}
 
-		avgInterDist = sumAvgDist / itemsC1.size();
-		return avgInterDist;
+		double avgDist = sumDist / n;
+		return avgDist;
 	}
 
 	private List<HierarchicalCluster> createInitialClusters(List<Item> items) {
@@ -198,7 +182,7 @@ public class HierarchicalClassifier {
 	private class MergePair {
 		int firsIndex;
 		int secondIndex;
-		double sim;
+		double dist;
 	}
 
 }

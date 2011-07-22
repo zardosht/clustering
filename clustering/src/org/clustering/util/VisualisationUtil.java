@@ -140,7 +140,7 @@ public class VisualisationUtil {
 		int iL = 1;
 		boolean newOffset = false;
 		for (List<HierarchicalCluster> level : levels) {
-			// get min, max sim for scaling
+			// get min, max dist for scaling
 			// double minSim = 1;
 			// double maxSim = 0;
 			// for (HierarchicalCluster cluster : level) {
