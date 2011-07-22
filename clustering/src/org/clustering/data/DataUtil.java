@@ -38,7 +38,9 @@ public class DataUtil {
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
 		nonUniqueKeywords = getNonUniqueKeywords();
-		Set<String> atLeast5TimesKeywords = getAtLeastNTimesKeywords(5);
+		int n = 5;
+		Set<String> atLeast5TimesKeywords = getAtLeastNTimesKeywords(n);
+		System.out.println(String.format("%d keywords appear at least %d times.", atLeast5TimesKeywords.size(), n));
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
 		filter(items, atLeast5TimesKeywords);
