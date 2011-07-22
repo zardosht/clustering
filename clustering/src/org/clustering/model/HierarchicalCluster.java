@@ -4,14 +4,14 @@ import java.util.HashSet;
 
 public class HierarchicalCluster {
 
-	private double simLevel;
+	private double distance;
 	private Item item;
 	private HierarchicalCluster firstChild;
 	private HierarchicalCluster secondChild;
 	private HierarchicalCluster parent;
 
-	public double getSimLevel() {
-		return simLevel;
+	public double getDistance() {
+		return distance;
 	}
 
 	public HierarchicalCluster getFirstChild() {
@@ -28,12 +28,12 @@ public class HierarchicalCluster {
 
 	public HierarchicalCluster(Item initialCentoroid) {
 		this.item = initialCentoroid;
-		simLevel = 1;
+		distance = 1;
 	}
 
-	public HierarchicalCluster(double maxSim, HierarchicalCluster cluster1,
+	public HierarchicalCluster(double distance, HierarchicalCluster cluster1,
 			HierarchicalCluster cluster2) {
-				this.simLevel = maxSim;
+				this.distance = distance;
 				this.firstChild = cluster1;
 				this.secondChild = cluster2;
 				// set parent

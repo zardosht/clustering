@@ -131,9 +131,9 @@ public class VisualisationUtil {
 		double xAxisOffset = drawYAxis(items, g, xOffset, yOffset, yOffsetStep);
 
 		List<List<HierarchicalCluster>> levels = getLevels(root);
-		// get level size
-		final int levelwidth = (int) ((width - xAxisOffset - 50) / levels
-				.size());
+//		// get level size
+//		final int levelwidth = (int) ((width - xAxisOffset - 50) / levels
+//				.size());
 		HashMap<HierarchicalCluster, Point> middles = new HashMap<HierarchicalCluster, Point>();
 
 		int levelOffset = (int) xAxisOffset;
@@ -176,7 +176,7 @@ public class VisualisationUtil {
 
 //				int newX = levelOffset + cWidth;
 				double offs = xAxisOffset;
-				int newX = (int) (offs + 10 + (1-cluster.getSimLevel())*(width-offs));
+				int newX = (int) (offs + 10 + (1-cluster.getDistance())*(width-offs));
 				
 				g.drawLine(p1.x, p1.y, newX, p1.y);
 				g.drawLine(p2.x, p2.y, newX, p2.y);
@@ -188,9 +188,9 @@ public class VisualisationUtil {
 
 			}
 			// new offset only if something has been drawn
-			if (newOffset) {
-				levelOffset += levelwidth;
-			}
+			// if (newOffset) {
+			// levelOffset += levelwidth;
+			// }
 			// g.setColor(Color.BLACK);
 			// g.drawLine(levelOffset, 0, levelOffset, height);
 			ImageIO.write(bi, "PNG",
