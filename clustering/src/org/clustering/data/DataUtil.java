@@ -79,7 +79,7 @@ public class DataUtil {
 				String itemDistance = itemDistances[j];
 				String[] split = itemDistance.split(";");
 				int item2Id = Integer.valueOf(split[0]);
-				Item item2 = findItemById(item2Id);
+				Item item2 = findItemById(item2Id);   
 				if (item2 == null) {
 					throw new IllegalStateException(
 							"This should never have happend! :'(");
