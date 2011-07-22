@@ -1,3 +1,36 @@
+
+order of point doesn't imply order in presentation :P
+
+part 1) visualization
+ 		1.1 Dot Cloud 
+ 			1.1.1 Unclustered image -> show that data set is crappy
+ 			1.1.2 Clustered Image
+ 			1.1.3 Clustered image with sorted by keyword occurence (in order to see hot spots)
+ 			1.1.4 dimension reduction (clustered/unclustered)
+ 			
+ 		1.2 show that force graph doesn't work (gephi graphs)
+ 		
+ 		1.3 Hierarchical clustering
+ 			* big image 
+ 			* smaller images (lower item count) with filters, skewing etc
+ 			* image with selected group of items (two similar groups, kids and action movies, to show how it works)
+ 			* try different distance measures
+ 			
+ 		
+
+
+
+
+
+
+
+
+
+
+
+
+****************************************************************
+
 1. Add two other implementations of distance. DONE
 2. Compare k-means results with a third distance measure that is not used in clustering. 
    Also Use different seed selection strategies (random vs. choosing seed as the
