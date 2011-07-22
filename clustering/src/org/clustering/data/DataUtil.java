@@ -28,13 +28,23 @@ public class DataUtil {
 	private Set<String> uniqueKeywords;
 	private Set<String> nonUniqueKeywords;
 
-	public void readData(boolean calcDistancesNew)
+	public void readData() throws Exception {
+		readData(true,-1);
+	}
+	
+	public void readData(boolean calcDistancesNew) throws Exception {
+		readData(calcDistancesNew,-1);
+	}
+	
+	public void readData(boolean calcDistancesNew, int itemCount)
 			throws FileNotFoundException, IOException {
 		System.out.println("Start reading data: " + new Date());
 		fileUtil = new FileUtil();
 		fileUtil.readInput("data/keywords.txt");
 		items = fileUtil.getItems();
-		items = items.subList(0, 50);
+		if (itemCount != -1 && itemCount < items.size()) {
+			items = items.subList(0, itemCount);
+		}
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
 		nonUniqueKeywords = getNonUniqueKeywords();
@@ -43,12 +53,11 @@ public class DataUtil {
 				uniqueKeywords.size(), allKeywords.size()));
 		filter(items, atLeast5TimesKeywords);
 
-		
 		// System.out.println("Starting Visualisation: " + new Date());
 		// new VisualisationUtil(nonUniqueKeywords,
 		// "results/items_before_clustering.png").drawItems(items);
 		// System.out.println("End Visualisation: " + new Date());
-		
+
 		if (calcDistancesNew) {
 			System.out.println("Starting calcDistance: " + new Date());
 			calcDistances(items, atLeast5TimesKeywords);
@@ -119,12 +128,14 @@ public class DataUtil {
 	}
 
 	private void filter(List<Item> items, Set<String> keywords) {
-		//reduce dataset dimension (remove keywords from items that are not element of target keywords set)
-		for(Item item : items){
+		// reduce dataset dimension (remove keywords from items that are not
+		// element of target keywords set)
+		for (Item item : items) {
 			item.retainKeywords(keywords);
 		}
-		
-		//remove items that do not have any keywords (must happen after reducing the filters)
+
+		// remove items that do not have any keywords (must happen after
+		// reducing the filters)
 		Iterator<Item> iterator = items.iterator();
 		while (iterator.hasNext()) {
 			Item item = iterator.next();
@@ -132,7 +143,7 @@ public class DataUtil {
 				iterator.remove();
 			}
 		}
-		
+
 	}
 
 	/**
@@ -185,16 +196,16 @@ public class DataUtil {
 	 * @return
 	 */
 	private Set<String> getAtLeastNTimesKeywords(int n) {
-		if(n == 2){
+		if (n == 2) {
 			Set<String> nonUniqueKeywords = new HashSet<String>();
 			nonUniqueKeywords.addAll(allKeywords);
 			nonUniqueKeywords.removeAll(uniqueKeywords);
 			return nonUniqueKeywords;
-		}else{
+		} else {
 			Set<String> result = new HashSet<String>();
 			Set<KeywordCount> allKeywordCounts = fileUtil.getAllKeywordCounts();
-			for(KeywordCount kwc : allKeywordCounts){
-				if(kwc.getCount() >= n){
+			for (KeywordCount kwc : allKeywordCounts) {
+				if (kwc.getCount() >= n) {
 					result.add(kwc.getKeyword());
 				}
 			}
