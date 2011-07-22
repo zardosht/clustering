@@ -27,8 +27,29 @@ part 2) theory
 			1.3.2. what we do to filter data
  		
 
+todo: 
+1. create a folder for final stuff
 
+2. create dot-map for unfiltered items
+3. create dot-map for unfiltered items with sorted keywords
+4. create dot-map for filtered items with atLeast2, atLeast5, and atLeast10 keywords
+5. create dot-map for clustered items with sorted keywords only with atLeast2 keywords using 2 different distances (otsuka, russell_and_rao)
+6. create dot-map for clustered items with sorted keywords only with atLeast10 keywords using 2 different distances (otsuka, russell_and_rao)
 
+7. create keywords histogram
+
+8. export flat clustering data for k for 2 distances (Otsuka, and russell) with atLeast2 keywords
+9. export flat clustering data for k for 2 distances (Otsuka, and russell) with atLeast10 keywords
+10. create K-RSS diagram for step 8 and 9
+
+11. create dendrogram for filtered items using atLeast2 keywords using AvgDistAlg (the big photo)
+12. create dendrogram for filtered items using atLeast10 keywords using AvgDistAlg
+13. find two groups of similar films (for example actions and romances)(manually). create dendrogram. See if dendrogram 
+    shows the two main groups or not. 
+
+14. create presentation.
+
+***** gephi
 
 
 

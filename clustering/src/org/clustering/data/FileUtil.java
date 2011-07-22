@@ -54,9 +54,10 @@ public class FileUtil {
 	}
 
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	private void initKeywordCounts() {
+	private void initKeywordCounts() throws IOException {
 		keywordCounts = new HashSet<KeywordCount>();
 		for (String keyword : allKeywords) {
 			int count = 0;
@@ -70,6 +71,19 @@ public class FileUtil {
 			}
 			keywordCounts.add(new KeywordCount(keyword, count));
 		}
+		outputKeywordCounts();
+	}
+
+	private void outputKeywordCounts() throws IOException {
+		StringBuilder sb = new StringBuilder("");
+		for(KeywordCount kwc : keywordCounts){
+			sb.append(kwc.getKeyword());
+			sb.append(";");
+			sb.append(kwc.getCount());
+			sb.append(String.format("\n", new Object[0]));
+		}
+		FileUtils.writeStringToFile(new File("results/keyword-count.csv"), sb.toString());
+			
 	}
 
 	public Set<String> getAllKeywords() {
