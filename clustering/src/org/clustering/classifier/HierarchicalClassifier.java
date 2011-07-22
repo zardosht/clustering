@@ -63,7 +63,7 @@ public class HierarchicalClassifier {
 			return mergePair;
 
 		}
-		case SIGLE_LINK_DISTANCE: {
+		case SINGLE_LINK_DISTANCE: {
 			//merge the two clusters with the smallest minimum pairwise distance
 			int mI = 0, mJ = 0;
 			double minDist = Double.MAX_VALUE;

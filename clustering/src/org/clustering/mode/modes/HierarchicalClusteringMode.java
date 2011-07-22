@@ -23,7 +23,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 		HierarchicalCluster root = classifier.createHierarchicalCluster(
 				dataUtil.getItems(),
-				HierarchicalAlgorithm.AVERAGE_LINK_DISTANCE);
+				HierarchicalAlgorithm.SINGLE_LINK_DISTANCE);
 		System.out.println("End hierarchical clustering: " + new Date());
 
 		System.out.println("Start writing result file " + new Date());

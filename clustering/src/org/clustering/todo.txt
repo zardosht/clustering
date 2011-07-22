@@ -1,4 +1,4 @@
-1. Add two other implementations of distance.
+1. Add two other implementations of distance. DONE
 2. Compare k-means results with a third distance measure that is not used in clustering. 
    Also Use different seed selection strategies (random vs. choosing seed as the
    centroid of i randomly selected vectors)

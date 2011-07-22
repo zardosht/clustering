@@ -13,11 +13,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.Cluster;
 import org.clustering.model.Item;
 
 public class FileUtil {
 
+	private Set<KeywordCount> keywordCounts;
 	private Set<String> allKeywords;
 	private Set<String> uniqueKeywords;
 	private List<Item> items;
@@ -48,18 +50,25 @@ public class FileUtil {
 		}
 		reader.close();
 
+		initKeywordCounts();
+	}
+
+	/**
+	 * 
+	 */
+	private void initKeywordCounts() {
+		keywordCounts = new HashSet<KeywordCount>();
 		for (String keyword : allKeywords) {
 			int count = 0;
 			for (Item item : items) {
 				if (item.getKeywords().contains(keyword)) {
 					count++;
-					if (count > 1)
-						break;
 				}
 			}
 			if (count == 1) {
 				getUniqueKeywords().add(keyword);
 			}
+			keywordCounts.add(new KeywordCount(keyword, count));
 		}
 	}
 
@@ -141,10 +150,9 @@ public class FileUtil {
 		return titles;
 	}
 
-	public Set<String> getNonUniqueKeywords() {
-		Set<String> nonUniqueKeywords = new HashSet<String>();
-		nonUniqueKeywords.addAll(allKeywords);
-		nonUniqueKeywords.removeAll(uniqueKeywords);
-		return nonUniqueKeywords;
+	public Set<KeywordCount> getAllKeywordCounts() {
+		return keywordCounts;
 	}
+
+
 }
