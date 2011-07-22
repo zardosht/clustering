@@ -39,8 +39,6 @@ public class Item implements Serializable{
 		keywords.remove(keyword);
 	}
 
-	
-
 	public void setDistance(Item item, double distance) {
 		distances.put(item, distance);
 	}
