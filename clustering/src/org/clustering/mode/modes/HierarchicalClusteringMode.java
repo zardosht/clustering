@@ -32,11 +32,13 @@ public class HierarchicalClusteringMode extends AbstractMode {
 				+ root.getFirstChild().getItems());
 		System.out.println("items in second child: "
 				+ root.getSecondChild().getItems());
-
+		
 		VisualisationUtil util = new VisualisationUtil(new HashSet<String>(),
 				"results/hierarchical_clusters.png");
 		util.drawHierarchicalCluster(root);
 
+		System.out.println("Finished: "+new Date());
+		
 	}
 
 }
