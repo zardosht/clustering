@@ -180,7 +180,7 @@ public class VisualisationUtil {
 	}
 
 	private int getX(int start, int end, double distance) {
-		return (int) ((end-start)*distance + start);
+		return (int) ((end-start)*Math.pow(distance,5) + start);
 	}
 	
 	private void drawXAxis(Graphics2D g, int start, int end, int yOffset) {
