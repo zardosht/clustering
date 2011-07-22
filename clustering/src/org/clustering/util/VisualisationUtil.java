@@ -170,9 +170,9 @@ public class VisualisationUtil {
 				middles.put(cluster, new Point(newX,
 						(Math.min(p1.y, p2.y) + (Math.abs(p1.y - p2.y) / 2))));
 			}
-			ImageIO.write(bi, "PNG",
-					new File("results/hierViz/level_" + items.size() + "_"
-							+ (iL++) + ".png"));
+//			ImageIO.write(bi, "PNG",
+//					new File("results/hierViz/level_" + items.size() + "_"
+//							+ (iL++) + ".png"));
 		}
 
 		// Store the image using the PNG format.
@@ -180,7 +180,8 @@ public class VisualisationUtil {
 	}
 
 	private int getX(int start, int end, double distance) {
-		return (int) ((end-start)*Math.pow(distance,5) + start);
+		return (int) ((end-start)*distance + start);
+//		return (int) ((end-start)*Math.pow(distance,5) + start);
 	}
 	
 	private void drawXAxis(Graphics2D g, int start, int end, int yOffset) {
