@@ -35,14 +35,14 @@ public class DataUtil {
 		fileUtil.readInput("data/keywords.txt");
 		items = fileUtil.getItems();
 		items = items.subList(0, 50);
-		filter(items);
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
 		nonUniqueKeywords = getNonUniqueKeywords();
+		Set<String> atLeast5TimesKeywords = getAtLeastNTimesKeywords(5);
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
+		filter(items, atLeast5TimesKeywords);
 
-		Set<String> atLeast4TimesKeywords = getAtLeastNTimesKeywords(4);
 		
 		// System.out.println("Starting Visualisation: " + new Date());
 		// new VisualisationUtil(nonUniqueKeywords,
@@ -51,7 +51,7 @@ public class DataUtil {
 		
 		if (calcDistancesNew) {
 			System.out.println("Starting calcDistance: " + new Date());
-			calcDistances(items, nonUniqueKeywords);
+			calcDistances(items, atLeast5TimesKeywords);
 			persistDisatnces("results/distances.csv");
 			System.out.println("End calcDistance: " + new Date());
 		} else {
@@ -118,7 +118,13 @@ public class DataUtil {
 		bufferedWriter.close();
 	}
 
-	private void filter(List<Item> items) {
+	private void filter(List<Item> items, Set<String> keywords) {
+		//reduce dataset dimension (remove keywords from items that are not element of target keywords set)
+		for(Item item : items){
+			item.retainKeywords(keywords);
+		}
+		
+		//remove items that do not have any keywords (must happen after reducing the filters)
 		Iterator<Item> iterator = items.iterator();
 		while (iterator.hasNext()) {
 			Item item = iterator.next();
@@ -126,6 +132,7 @@ public class DataUtil {
 				iterator.remove();
 			}
 		}
+		
 	}
 
 	/**

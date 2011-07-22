@@ -3,6 +3,7 @@ package org.clustering.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Item implements Serializable{
 	
@@ -33,6 +34,10 @@ public class Item implements Serializable{
 	public void addKeyword(String keyword) {
 		keywords.add(keyword);
 	}
+	
+	public void removeKeyword(String keyword){
+		keywords.remove(keyword);
+	}
 
 	
 
@@ -52,6 +57,14 @@ public class Item implements Serializable{
 	@Override
 	public String toString() {
 		return "Item "+itemNumber+" keywords: "+keywords.size();
+	}
+
+	/**
+	 * retains from this item's keywords, only those who are contained in the given parameter
+	 * @param keywords2
+	 */
+	public void retainKeywords(Set<String> allRetainingKeywords) {
+		keywords.retainAll(allRetainingKeywords);
 	}
 
 }
