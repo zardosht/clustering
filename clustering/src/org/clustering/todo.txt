@@ -28,7 +28,7 @@ part 2) theory
  		
 
 todo: 
-1. create a folder for final stuff
+1. create a folder for final stuff DONE
 
 2. create dot-map for unfiltered items
 3. create dot-map for unfiltered items with sorted keywords
