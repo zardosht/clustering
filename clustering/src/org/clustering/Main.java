@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.clustering.mode.AbstractMode;
 import org.clustering.mode.modes.CreateClusterMode;
 import org.clustering.mode.modes.EvaluateMode;
+import org.clustering.mode.modes.FindGoodClusterMode;
 import org.clustering.mode.modes.HierarchicalClusteringMode;
 import org.clustering.mode.modes.KeywordCountMode;
 import org.clustering.mode.modes.ProductionMode;
@@ -19,6 +20,7 @@ public class Main {
 		modes.add(new ProductionMode());
 		modes.add(new HierarchicalClusteringMode());
 		modes.add(new KeywordCountMode());
+		modes.add(new FindGoodClusterMode());
 		
 		boolean hasRunned = false;
 		for(AbstractMode mode : modes) {
