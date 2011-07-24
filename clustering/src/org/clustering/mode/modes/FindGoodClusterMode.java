@@ -44,11 +44,14 @@ public class FindGoodClusterMode extends AbstractMode {
 //			System.out.println(list.get(list.size()-1).getDistance(centroid));
 			
 			int i = 0;
+			String movies = "";
+			String ids ="";
 			for(Item item : list) {
-				System.out.print("["+item.getItemNumber()+"] "+map.get(item.getItemNumber())+", ");
+				movies +="["+item.getItemNumber()+"] "+map.get(item.getItemNumber())+", ";
+				ids += item.getItemNumber()+", ";
 				if((i++)>10) break;
 			}
-			System.out.println("\n---\n");
+			System.out.println(movies+"\n"+ids+"\n---\n");
 		}
 
 	}

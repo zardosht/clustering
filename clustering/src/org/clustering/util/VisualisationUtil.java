@@ -118,7 +118,12 @@ public class VisualisationUtil {
 
 	public void drawHierarchicalCluster(HierarchicalCluster root)
 			throws IOException {
-		ArrayList<Item> items = new ArrayList<Item>(root.getItems());
+		drawHierarchicalCluster(root,new ArrayList<Item>(root.getItems()));
+	}
+	
+	public void drawHierarchicalCluster(HierarchicalCluster root, List<Item> items)
+			throws IOException {
+		
 
 		final int width = 1200;
 		final int height = items.size() * 20;
@@ -206,7 +211,7 @@ public class VisualisationUtil {
 		g.drawString(str, start-7, yOffset-6);
 	}
 
-	private double drawYAxis(ArrayList<Item> items, Graphics2D g, int xOffset,
+	private double drawYAxis(List<Item> items, Graphics2D g, int xOffset,
 			int yOffset, int yOffsetStep) {
 		
 		int maxWidth = 150;
