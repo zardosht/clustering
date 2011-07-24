@@ -39,12 +39,16 @@ public class FindGoodClusterMode extends AbstractMode {
 					return (centroid.getDistance(o1) < centroid.getDistance(o2))?-1:1;
 				}
 			});
+			
+//			System.out.println(list.get(0).getDistance(centroid));
+//			System.out.println(list.get(list.size()-1).getDistance(centroid));
+			
 			int i = 0;
 			for(Item item : list) {
-				System.out.print(item.getItemNumber()+" "+map.get(item.getItemNumber())+" ");
+				System.out.print("["+item.getItemNumber()+"] "+map.get(item.getItemNumber())+", ");
 				if((i++)>10) break;
 			}
-			System.out.println("");
+			System.out.println("\n---\n");
 		}
 
 	}
