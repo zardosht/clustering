@@ -26,7 +26,7 @@ public class DataUtil {
 	private List<Item> items;
 	private Set<String> allKeywords;
 	private Set<String> uniqueKeywords;
-	private Set<String> nonUniqueKeywords;
+	private Set<String> atLeast2Keywords;
 
 	public void readData() throws Exception {
 		readData(true,-1);
@@ -47,18 +47,21 @@ public class DataUtil {
 		}
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
-		nonUniqueKeywords = getNonUniqueKeywords();
+		atLeast2Keywords = getNonUniqueKeywords();
 		int n = 5;
 		Set<String> atLeast5TimesKeywords = getAtLeastNTimesKeywords(n);
+		n = 10;
+		Set<String> atLeast10TimesKeywords = getAtLeastNTimesKeywords(n);
 		System.out.println(String.format("%d keywords appear at least %d times.", atLeast5TimesKeywords.size(), n));
+		System.out.println(String.format("%d keywords appear at least %d times.", atLeast10TimesKeywords.size(), n));
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
 		filter(items, atLeast5TimesKeywords);
 
-		// System.out.println("Starting Visualisation: " + new Date());
-		// new VisualisationUtil(nonUniqueKeywords,
-		// "results/items_before_clustering.png").drawItems(items);
-		// System.out.println("End Visualisation: " + new Date());
+		 System.out.println("Starting Visualisation: " + new Date());
+		 new VisualisationUtil(atLeast10TimesKeywords,
+		 "results/items_before_clustering.png").drawItems(items);
+		 System.out.println("End Visualisation: " + new Date());
 
 		if (calcDistancesNew) {
 			System.out.println("Starting calcDistance: " + new Date());
@@ -150,7 +153,7 @@ public class DataUtil {
 
 	/**
 	 * @param items
-	 * @param nonUniqueKeywords
+	 * @param atLeast2Keywords
 	 */
 	private void calcDistances(List<Item> items, Set<String> nonUniqueKeywords) {
 		for (int i = 0; i < items.size(); i++) {
@@ -184,10 +187,10 @@ public class DataUtil {
 	}
 
 	public Set<String> getNonUniqueKeywords() {
-		if (nonUniqueKeywords == null) {
-			nonUniqueKeywords = getAtLeastNTimesKeywords(2);
+		if (atLeast2Keywords == null) {
+			atLeast2Keywords = getAtLeastNTimesKeywords(2);
 		}
-		return nonUniqueKeywords;
+		return atLeast2Keywords;
 	}
 
 	/**

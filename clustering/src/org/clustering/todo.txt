@@ -30,13 +30,13 @@ part 2) theory
 todo: 
 1. create a folder for final stuff DONE
 
-2. create dot-map for unfiltered items
+2. create dot-map for unfiltered unclustered items DONE
 3. create dot-map for unfiltered items with sorted keywords
-4. create dot-map for filtered items with atLeast2, atLeast5, and atLeast10 keywords
+4. create dot-map for filtered items with atLeast2, atLeast5, and atLeast10 keywords DONE
 5. create dot-map for clustered items with sorted keywords only with atLeast2 keywords using 2 different distances (otsuka, russell_and_rao)
 6. create dot-map for clustered items with sorted keywords only with atLeast10 keywords using 2 different distances (otsuka, russell_and_rao)
 
-7. create keywords histogram
+7. create keywords histogram DONE
 
 8. export flat clustering data for k for 2 distances (Otsuka, and russell) with atLeast2 keywords
 9. export flat clustering data for k for 2 distances (Otsuka, and russell) with atLeast10 keywords
