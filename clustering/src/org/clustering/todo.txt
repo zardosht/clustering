@@ -33,7 +33,6 @@ todo:
 2. create dot-map for unfiltered unclustered items DONE
 3. create dot-map for unfiltered items with sorted keywords DONE
 4. create dot-map for filtered items with atLeast2, atLeast5, and atLeast10 keywords DONE
-5. create dot-map for clustered items with sorted keywords only with atLeast5 keywords using 2 different distances (otsuka, russell_and_rao)
 6. create dot-map for clustered items with sorted keywords only with atLeast10 keywords using 2 different distances (otsuka, russell_and_rao)
 
 7. create keywords histogram DONE
@@ -42,10 +41,10 @@ todo:
 9. export flat clustering data for k for 2 distances (Otsuka, and russell) with atLeast10 keywords DONE
 10. create K-RSS diagram for step 8 and 9 DONE ==> RESULT: We use atLeast10Keywords filter for both, Otsuka-->K=8, Russell-->K=20
 
-11. create dendrogram for filtered items using atLeast2 keywords using AvgDistAlg (the big photo)
-12. create dendrogram for filtered items using atLeast10 keywords using AvgDistAlg
+11. create dendrogram for filtered items using atLeast2 keywords using AvgDistAlg (the big photo) DONE
+12. create dendrogram for filtered items using atLeast10 keywords using AvgDistAlg DONE
 13. find two groups of similar films (for example actions and romances)(manually). create dendrogram. See if dendrogram 
-    shows the two main groups or not. 
+    shows the two main groups or not. DONE
 
 14. create presentation.
 
