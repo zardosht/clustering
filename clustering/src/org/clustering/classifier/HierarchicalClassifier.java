@@ -41,80 +41,49 @@ public class HierarchicalClassifier {
 
 	private MergePair getMergePair(List<HierarchicalCluster> clusters,
 			HierarchicalAlgorithm similarityStrategy) {
-		switch (similarityStrategy) {
-		case AVERAGE_LINK_DISTANCE: {
-			int mI = 0, mJ = 0;
-			double maxSim = 0;
-			for (int i = 0; i < clusters.size(); i++) {
-				for (int j = i + 1; j < clusters.size(); j++) {
-					double similarity = getAvgLinkDistance(clusters.get(i),
-							clusters.get(j));
-					if (similarity > maxSim) {
-						maxSim = similarity;
-						mI = i;
-						mJ = j;
-					}
+		int mI = 0, mJ = 0;
+		double minDist = Double.MAX_VALUE;
+		for (int i = 0; i < clusters.size(); i++) {
+			for (int j = i + 1; j < clusters.size(); j++) {
+				double dist = getDistance(clusters.get(i), clusters.get(j),
+						similarityStrategy);
+				if (dist < minDist) {
+					minDist = dist;
+					mI = i;
+					mJ = j;
 				}
 			}
-			MergePair mergePair = new MergePair();
-			mergePair.firsIndex = mI;
-			mergePair.secondIndex = mJ;
-			mergePair.dist = maxSim;
-			return mergePair;
+		}
+		MergePair mergePair = new MergePair();
+		mergePair.firsIndex = mI;
+		mergePair.secondIndex = mJ;
+		mergePair.dist = minDist;
+		return mergePair;
 
-		}
-		case SINGLE_LINK_DISTANCE: {
-			//merge the two clusters with the smallest minimum pairwise distance
-			int mI = 0, mJ = 0;
-			double minDist = Double.MAX_VALUE;
-			for (int i = 0; i < clusters.size(); i++) {
-				for (int j = i + 1; j < clusters.size(); j++) {
-					double dist = getSingleLinkDistance(
-							clusters.get(i), clusters.get(j));
-					if (dist < minDist) {
-						minDist = dist;
-						mI = i;
-						mJ = j;
-					}
-				}
-			}
-			MergePair mergePair = new MergePair();
-			mergePair.firsIndex = mI;
-			mergePair.secondIndex = mJ;
-			mergePair.dist = minDist;
-			return mergePair;
-		}
-		case COMPLETE_LINK_DISTANCE: {
-			//merge clusters with the "smallest" "maximum pairwise distance"
-			int mI = 0, mJ = 0;
-			double minDist = Double.MAX_VALUE;
-			for (int i = 0; i < clusters.size(); i++) {
-				for (int j = i + 1; j < clusters.size(); j++) {
-					double dist = getCompleteLinkDistance(
-							clusters.get(i), clusters.get(j));
-					if (dist < minDist) {
-						minDist = dist;
-						mI = i;
-						mJ = j;
-					}
-				}
-			}
-			MergePair mergePair = new MergePair();
-			mergePair.firsIndex = mI;
-			mergePair.secondIndex = mJ;
-			mergePair.dist = minDist;
-			return mergePair;
-		}
-		}
-
-		return null;
 	}
 
+	private double getDistance(HierarchicalCluster c1, HierarchicalCluster c2,
+			HierarchicalAlgorithm similarityStrategy) {
+		double dist = Double.MAX_VALUE;
+		switch (similarityStrategy) {
+		case AVERAGE_LINK_DISTANCE:
+			dist = getAvgLinkDistance(c1, c2);
+			break;
+		case SINGLE_LINK_DISTANCE:
+			dist = getSingleLinkDistance(c1, c2);
+			break;
+		case COMPLETE_LINK_DISTANCE:
+			dist = getCompleteLinkDistance(c1, c2);
+			break;
+		}
+
+		return dist;
+	}
 
 	private double getCompleteLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		//merge clusters with the "smallest" "maximum pairwise distance"
-		//return maximum pairwise distance 
+		// merge clusters with the "smallest" "maximum pairwise distance"
+		// return maximum pairwise distance
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
@@ -133,8 +102,8 @@ public class HierarchicalClassifier {
 
 	private double getSingleLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		//merge the two clusters with the smallest minimum pairwise distance
-		//return minimum pairwise distance
+		// merge the two clusters with the smallest minimum pairwise distance
+		// return minimum pairwise distance
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
@@ -153,8 +122,9 @@ public class HierarchicalClassifier {
 
 	private double getAvgLinkDistance(HierarchicalCluster c1,
 			HierarchicalCluster c2) {
-		//merge the two clusters with the smallest average distance between any two points in the clusters 
-		//return average distance between each two point in two clusters.
+		// merge the two clusters with the smallest average distance between any
+		// two points in the clusters
+		// return average distance between each two point in two clusters.
 		HashSet<Item> itemsC1 = c1.getItems();
 		HashSet<Item> itemsC2 = c2.getItems();
 
