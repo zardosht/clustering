@@ -1,8 +1,6 @@
 package org.clustering.mode.modes;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +33,7 @@ public class EvaluateMode extends AbstractMode {
 	private void evaluateKs(CSVWriter csvWriter) throws Exception {
 		DataUtil dataUtil = new DataUtil();
 		int nAtLeastKeywords = 10;
-		dataUtil.readData(true, nAtLeastKeywords);
+		dataUtil.readData(true, nAtLeastKeywords, DistanceTypes.RUSSELL_AND_RAO_SIMILARITY);
 		Set<String> keywords = dataUtil.getAtLeastNTimesKeywords(nAtLeastKeywords);
 		Evaluator evaluator = new Evaluator(keywords,
 				DistanceTypes.JACCARD_SIMILARITY);

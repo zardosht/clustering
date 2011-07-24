@@ -1,10 +1,8 @@
 package org.clustering.data;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,14 +11,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.apache.commons.io.FileUtils;
 import org.clustering.evaluator.KeywordCount;
 import org.clustering.model.DistanceTypes;
 import org.clustering.model.Item;
 import org.clustering.util.DistanceUtil;
-import org.clustering.util.VisualisationUtil;
 
 public class DataUtil {
 
@@ -31,14 +27,14 @@ public class DataUtil {
 	private Set<String> atLeast2Keywords;
 
 	public void readData() throws Exception {
-		readData(true,-1);
+		readData(true,-1, DistanceTypes.RUSSELL_AND_RAO_SIMILARITY);
 	}
 	
-	public void readData(boolean calcDistancesNew, int nAtLeastKweywordFilter) throws Exception {
-		readData(calcDistancesNew,-1, nAtLeastKweywordFilter);
+	public void readData(boolean calcDistancesNew, int nAtLeastKweywordFilter, DistanceTypes distanceType) throws Exception {
+		readData(calcDistancesNew,-1, nAtLeastKweywordFilter, distanceType);
 	}
 	
-	public void readData(boolean calcDistancesNew, int itemCount, int nAtLeastKweywordFilter)
+	public void readData(boolean calcDistancesNew, int itemCount, int nAtLeastKweywordFilter, DistanceTypes distanceType)
 			throws FileNotFoundException, IOException {
 		System.out.println("Start reading data: " + new Date());
 		fileUtil = new FileUtil();
@@ -71,7 +67,7 @@ public class DataUtil {
 
 		if (calcDistancesNew) {
 			System.out.println("Starting calcDistance: " + new Date());
-			calcDistances(items, keywords);
+			calcDistances(items, keywords, distanceType);
 			persistDisatnces("results/distances.csv");
 			System.out.println("End calcDistance: " + new Date());
 		} else {
@@ -159,9 +155,10 @@ public class DataUtil {
 
 	/**
 	 * @param items
+	 * @param distanceType 
 	 * @param atLeast2Keywords
 	 */
-	private void calcDistances(List<Item> items, Set<String> keywords) {
+	private void calcDistances(List<Item> items, Set<String> keywords, DistanceTypes distanceType) {
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
@@ -169,7 +166,7 @@ public class DataUtil {
 				Item item2 = items.get(j);
 				item2.setDistance(item2, 0.0);
 				double distance = DistanceUtil.calcDistance(item1, item2,
-						keywords, DistanceTypes.OTSUKA_SIMILARITY);
+						keywords, distanceType);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}

@@ -9,6 +9,7 @@ import org.clustering.classifier.Classifier;
 import org.clustering.data.DataUtil;
 import org.clustering.mode.AbstractMode;
 import org.clustering.model.Cluster;
+import org.clustering.model.DistanceTypes;
 import org.clustering.util.PrintUtil;
 import org.clustering.util.VisualisationUtil;
 
@@ -22,7 +23,7 @@ public class CreateClusterMode extends AbstractMode {
 		System.out.println("Start Clustering: " + new Date());
 		DataUtil dataUtil = new DataUtil();
 		int nAtLeastKeywords = 10;
-		dataUtil.readData(true, nAtLeastKeywords);
+		dataUtil.readData(true, nAtLeastKeywords, DistanceTypes.OTSUKA_SIMILARITY);
 		Set<String> keywords = dataUtil.getAtLeastNTimesKeywords(nAtLeastKeywords);
 		Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();

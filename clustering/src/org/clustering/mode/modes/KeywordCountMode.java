@@ -1,16 +1,10 @@
 package org.clustering.mode.modes;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.clustering.data.CSVWriter;
 import org.clustering.data.FileUtil;

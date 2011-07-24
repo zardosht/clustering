@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.clustering.classifier.HierarchicalAlgorithm;
 import org.clustering.classifier.HierarchicalClassifier;
 import org.clustering.data.DataUtil;
 import org.clustering.mode.AbstractMode;
+import org.clustering.model.DistanceTypes;
 import org.clustering.model.HierarchicalCluster;
 import org.clustering.model.Item;
 import org.clustering.util.VisualisationUtil;
@@ -24,7 +24,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 	public void _runCreateCluster() throws Exception {
 		DataUtil dataUtil = new DataUtil();
 		int nAtLeastKeywords = 10;
-		dataUtil.readData(true, nAtLeastKeywords);
+		dataUtil.readData(true, nAtLeastKeywords, DistanceTypes.RUSSELL_AND_RAO_SIMILARITY);
 		System.out.println("Start hierarchical clustering: " + new Date());
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 
@@ -58,7 +58,7 @@ public class HierarchicalClusteringMode extends AbstractMode {
 		// List<Item> items = dataUtil.getItems();
 
 		HierarchicalCluster root = classifier.createHierarchicalCluster(items,
-				HierarchicalAlgorithm.COMPLETE_LINK_DISTANCE);
+				HierarchicalAlgorithm.AVERAGE_LINK_DISTANCE);
 		System.out.println("End hierarchical clustering: " + new Date());
 
 		System.out.println("Start writing result file " + new Date());

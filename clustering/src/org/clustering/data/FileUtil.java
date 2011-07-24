@@ -76,7 +76,6 @@ public class FileUtil {
 	}
 
 	private void outputKeywordCounts() throws IOException {
-		List<KeywordCount> sortedKeywordCounts = getSortedKeywordCounts();
 		StringBuilder sb = new StringBuilder("");
 		for(KeywordCount kwc : keywordCounts){
 			sb.append(kwc.getKeyword());

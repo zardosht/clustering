@@ -1,18 +1,17 @@
 package org.clustering.mode.modes;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.clustering.classifier.Classifier;
 import org.clustering.data.DataUtil;
 import org.clustering.data.FileUtil;
 import org.clustering.mode.AbstractMode;
 import org.clustering.model.Cluster;
+import org.clustering.model.DistanceTypes;
 import org.clustering.model.Item;
 
 public class FindGoodClusterMode extends AbstractMode {
@@ -26,11 +25,12 @@ public class FindGoodClusterMode extends AbstractMode {
 	public void _runFGC() throws Exception {
 		dataUtil = new DataUtil();
 		int nAtLeastKeywords = 10;
-		dataUtil.readData(true, nAtLeastKeywords);
+		dataUtil.readData(true, nAtLeastKeywords, DistanceTypes.RUSSELL_AND_RAO_SIMILARITY);
 		Classifier classifier = new Classifier(10, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();
 		
-		Map<Integer, String> map = new FileUtil().importMoviesFromFile("data/u.item");
+		new FileUtil();
+		Map<Integer, String> map = FileUtil.importMoviesFromFile("data/u.item");
 
 		for (Cluster cluster : clusters) {
 			final Item centroid = cluster.getCentroid();
