@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.clustering.classifier.Classifier;
 import org.clustering.data.DataUtil;
@@ -24,7 +25,8 @@ public class FindGoodClusterMode extends AbstractMode {
 
 	public void _runFGC() throws Exception {
 		dataUtil = new DataUtil();
-		dataUtil.readData(true);
+		int nAtLeastKeywords = 10;
+		dataUtil.readData(true, nAtLeastKeywords);
 		Classifier classifier = new Classifier(10, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();
 		

@@ -34,11 +34,11 @@ public class DataUtil {
 		readData(true,-1);
 	}
 	
-	public void readData(boolean calcDistancesNew) throws Exception {
-		readData(calcDistancesNew,-1);
+	public void readData(boolean calcDistancesNew, int nAtLeastKweywordFilter) throws Exception {
+		readData(calcDistancesNew,-1, nAtLeastKweywordFilter);
 	}
 	
-	public void readData(boolean calcDistancesNew, int itemCount)
+	public void readData(boolean calcDistancesNew, int itemCount, int nAtLeastKweywordFilter)
 			throws FileNotFoundException, IOException {
 		System.out.println("Start reading data: " + new Date());
 		fileUtil = new FileUtil();
@@ -50,32 +50,28 @@ public class DataUtil {
 		allKeywords = fileUtil.getAllKeywords();
 		uniqueKeywords = fileUtil.getUniqueKeywords();
 		atLeast2Keywords = getNonUniqueKeywords();
-		int n = 5;
-		Set<String> atLeast5TimesKeywords = getAtLeastNTimesKeywords(n);
-		n = 10;
-		Set<String> atLeast10TimesKeywords = getAtLeastNTimesKeywords(n);
-		System.out.println(String.format("%d keywords appear at least %d times.", atLeast5TimesKeywords.size(), n));
-		System.out.println(String.format("%d keywords appear at least %d times.", atLeast10TimesKeywords.size(), n));
+		Set<String> keywords = getAtLeastNTimesKeywords(nAtLeastKweywordFilter);
+		System.out.println(String.format("%d keywords appear at least %d times.", keywords.size(), nAtLeastKweywordFilter));
 		System.out.println(String.format("%d out of %d keywords are unique.",
 				uniqueKeywords.size(), allKeywords.size()));
-		filter(items, atLeast5TimesKeywords);
+		filter(items, keywords);
 
 //		 System.out.println("Starting Visualisation: " + new Date());
 //		 new VisualisationUtil(atLeast10TimesKeywords,
 //		 "results/items_before_clustering.png").drawItems(items);
 //		 System.out.println("End Visualisation: " + new Date());
-		n = 10;
-		List<String> sortedAtLeast10TimesKeywords = getSortedAtLeastNTimesKeywords(n);
-		n = 2;
-		List<String> sortedAtLeast2TimesKeywords = getSortedAtLeastNTimesKeywords(n);
-		System.out.println("Starting Visualisation: " + new Date());
-		 new VisualisationUtil(sortedAtLeast10TimesKeywords,
-		 "results/items_before_clustering.png").drawItems(items);
-		 System.out.println("End Visualisation: " + new Date());
+//		n = 10;
+//		List<String> sortedAtLeast10TimesKeywords = getSortedAtLeastNTimesKeywords(n);
+//		n = 2;
+//		List<String> sortedAtLeast2TimesKeywords = getSortedAtLeastNTimesKeywords(n);
+//		System.out.println("Starting Visualisation: " + new Date());
+//		 new VisualisationUtil(sortedAtLeast10TimesKeywords,
+//		 "results/items_before_clustering.png").drawItems(items);
+//		 System.out.println("End Visualisation: " + new Date());
 
 		if (calcDistancesNew) {
 			System.out.println("Starting calcDistance: " + new Date());
-			calcDistances(items, atLeast5TimesKeywords);
+			calcDistances(items, keywords);
 			persistDisatnces("results/distances.csv");
 			System.out.println("End calcDistance: " + new Date());
 		} else {
@@ -165,7 +161,7 @@ public class DataUtil {
 	 * @param items
 	 * @param atLeast2Keywords
 	 */
-	private void calcDistances(List<Item> items, Set<String> nonUniqueKeywords) {
+	private void calcDistances(List<Item> items, Set<String> keywords) {
 		for (int i = 0; i < items.size(); i++) {
 			for (int j = i + 1; j < items.size(); j++) {
 				Item item1 = items.get(i);
@@ -173,7 +169,7 @@ public class DataUtil {
 				Item item2 = items.get(j);
 				item2.setDistance(item2, 0.0);
 				double distance = DistanceUtil.calcDistance(item1, item2,
-						nonUniqueKeywords, DistanceTypes.OTSUKA_SIMILARITY);
+						keywords, DistanceTypes.OTSUKA_SIMILARITY);
 				item1.setDistance(item2, distance);
 				item2.setDistance(item1, distance);
 			}
@@ -210,7 +206,7 @@ public class DataUtil {
 	 * @param n
 	 * @return
 	 */
-	private Set<String> getAtLeastNTimesKeywords(int n) {
+	public Set<String> getAtLeastNTimesKeywords(int n) {
 		if (n == 2) {
 			Set<String> nonUniqueKeywords = new HashSet<String>();
 			nonUniqueKeywords.addAll(allKeywords);
@@ -235,7 +231,7 @@ public class DataUtil {
 	 * @param n
 	 * @return
 	 */
-	private List<String> getSortedAtLeastNTimesKeywords(int n) {
+	public List<String> getSortedAtLeastNTimesKeywords(int n) {
 			List<String> result = new ArrayList<String>();
 			List<KeywordCount> allKeywordCounts = fileUtil.getSortedKeywordCounts();
 			for (KeywordCount kwc : allKeywordCounts) {

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.clustering.classifier.HierarchicalAlgorithm;
 import org.clustering.classifier.HierarchicalClassifier;
@@ -22,7 +23,8 @@ public class HierarchicalClusteringMode extends AbstractMode {
 
 	public void _runCreateCluster() throws Exception {
 		DataUtil dataUtil = new DataUtil();
-		dataUtil.readData(true);
+		int nAtLeastKeywords = 10;
+		dataUtil.readData(true, nAtLeastKeywords);
 		System.out.println("Start hierarchical clustering: " + new Date());
 		HierarchicalClassifier classifier = new HierarchicalClassifier();
 

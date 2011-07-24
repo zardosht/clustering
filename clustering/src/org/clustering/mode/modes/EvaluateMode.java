@@ -34,9 +34,10 @@ public class EvaluateMode extends AbstractMode {
 
 	private void evaluateKs(CSVWriter csvWriter) throws Exception {
 		DataUtil dataUtil = new DataUtil();
-		dataUtil.readData(true);
-		Set<String> allKeywords = dataUtil.getAllKeywords();
-		Evaluator evaluator = new Evaluator(allKeywords,
+		int nAtLeastKeywords = 10;
+		dataUtil.readData(true, nAtLeastKeywords);
+		Set<String> keywords = dataUtil.getAtLeastNTimesKeywords(nAtLeastKeywords);
+		Evaluator evaluator = new Evaluator(keywords,
 				DistanceTypes.JACCARD_SIMILARITY);
 		for (int kCluster = 2; kCluster < 201; kCluster += 2) {
 			System.out.println("Start Clustering for k: " + kCluster + " : "

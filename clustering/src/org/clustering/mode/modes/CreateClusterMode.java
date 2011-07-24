@@ -21,8 +21,9 @@ public class CreateClusterMode extends AbstractMode {
 	public void _runCreateCluster(int kCluster) throws Exception {
 		System.out.println("Start Clustering: " + new Date());
 		DataUtil dataUtil = new DataUtil();
-		dataUtil.readData(true);
-		Set<String> nonUniqueKeywords = dataUtil.getNonUniqueKeywords();
+		int nAtLeastKeywords = 10;
+		dataUtil.readData(true, nAtLeastKeywords);
+		Set<String> keywords = dataUtil.getAtLeastNTimesKeywords(nAtLeastKeywords);
 		Classifier classifier = new Classifier(kCluster, dataUtil.getItems());
 		List<Cluster> clusters = classifier.createClusters();
 		System.out.println("End Clustering: " + new Date());
@@ -34,9 +35,9 @@ public class CreateClusterMode extends AbstractMode {
 		
 		System.out.println("End writing result file " + new Date());
 	
-		PrintUtil.printTopTenKeywordsPerCluster(clusters, nonUniqueKeywords);
+		PrintUtil.printTopTenKeywordsPerCluster(clusters, keywords);
 
-		new VisualisationUtil(nonUniqueKeywords, "results/clusteredItems.png")
+		new VisualisationUtil(keywords, "results/clusteredItems.png")
 				.drawClusters(clusters);
 	}
 }
