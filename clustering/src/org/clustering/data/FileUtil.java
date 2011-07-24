@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,6 +76,7 @@ public class FileUtil {
 	}
 
 	private void outputKeywordCounts() throws IOException {
+		List<KeywordCount> sortedKeywordCounts = getSortedKeywordCounts();
 		StringBuilder sb = new StringBuilder("");
 		for(KeywordCount kwc : keywordCounts){
 			sb.append(kwc.getKeyword());
@@ -84,6 +86,12 @@ public class FileUtil {
 		}
 		FileUtils.writeStringToFile(new File("results/keyword-count.csv"), sb.toString());
 			
+	}
+
+	public List<KeywordCount> getSortedKeywordCounts() {
+		List<KeywordCount> result = new ArrayList<KeywordCount>(keywordCounts);
+		Collections.sort(result);
+		return result;
 	}
 
 	public Set<String> getAllKeywords() {

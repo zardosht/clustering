@@ -36,6 +36,11 @@ public class VisualisationUtil {
 		this.filename = outputFilename;
 		this.keywords = keywords.toArray(new String[keywords.size()]);
 	}
+	
+	public VisualisationUtil(List<String> sortedKeywords, String outputFilename){
+		this.filename = outputFilename;
+		this.keywords = sortedKeywords.toArray(new String[sortedKeywords.size()]);
+	}
 
 	public void drawItems(List<Item> items) throws IOException {
 		int[][] itemKeywordMatrix = createItemKeywordMatrix(items);

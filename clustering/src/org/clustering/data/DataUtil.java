@@ -7,11 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.apache.commons.io.FileUtils;
 import org.clustering.evaluator.KeywordCount;
@@ -58,8 +60,16 @@ public class DataUtil {
 				uniqueKeywords.size(), allKeywords.size()));
 		filter(items, atLeast5TimesKeywords);
 
-		 System.out.println("Starting Visualisation: " + new Date());
-		 new VisualisationUtil(atLeast10TimesKeywords,
+//		 System.out.println("Starting Visualisation: " + new Date());
+//		 new VisualisationUtil(atLeast10TimesKeywords,
+//		 "results/items_before_clustering.png").drawItems(items);
+//		 System.out.println("End Visualisation: " + new Date());
+		n = 10;
+		List<String> sortedAtLeast10TimesKeywords = getSortedAtLeastNTimesKeywords(n);
+		n = 2;
+		List<String> sortedAtLeast2TimesKeywords = getSortedAtLeastNTimesKeywords(n);
+		System.out.println("Starting Visualisation: " + new Date());
+		 new VisualisationUtil(sortedAtLeast10TimesKeywords,
 		 "results/items_before_clustering.png").drawItems(items);
 		 System.out.println("End Visualisation: " + new Date());
 
@@ -216,5 +226,23 @@ public class DataUtil {
 			}
 			return result;
 		}
+	}
+	
+	/**
+	 * return keywords that are present at least n times and sorts the result on keyword frequency
+	 * 
+	 * @param allKeywords2
+	 * @param n
+	 * @return
+	 */
+	private List<String> getSortedAtLeastNTimesKeywords(int n) {
+			List<String> result = new ArrayList<String>();
+			List<KeywordCount> allKeywordCounts = fileUtil.getSortedKeywordCounts();
+			for (KeywordCount kwc : allKeywordCounts) {
+				if (kwc.getCount() >= n) {
+					result.add(kwc.getKeyword());
+				}
+			}
+			return result;
 	}
 }

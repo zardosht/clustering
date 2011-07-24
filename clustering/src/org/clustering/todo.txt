@@ -31,7 +31,7 @@ todo:
 1. create a folder for final stuff DONE
 
 2. create dot-map for unfiltered unclustered items DONE
-3. create dot-map for unfiltered items with sorted keywords
+3. create dot-map for unfiltered items with sorted keywords DONE
 4. create dot-map for filtered items with atLeast2, atLeast5, and atLeast10 keywords DONE
 5. create dot-map for clustered items with sorted keywords only with atLeast2 keywords using 2 different distances (otsuka, russell_and_rao)
 6. create dot-map for clustered items with sorted keywords only with atLeast10 keywords using 2 different distances (otsuka, russell_and_rao)

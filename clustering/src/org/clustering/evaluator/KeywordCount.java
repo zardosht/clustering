@@ -1,6 +1,6 @@
 package org.clustering.evaluator;
 
-public class KeywordCount {
+public class KeywordCount implements Comparable<KeywordCount> {
 
 	private final String keyword;
 	private final int count;
@@ -21,6 +21,15 @@ public class KeywordCount {
 	@Override
 	public String toString() {
 		return keyword + String.format("(%d)", count);
+	}
+
+	@Override
+	public int compareTo(KeywordCount other) {
+		if(other.count > this.count){
+			return 1;
+		}else{
+			return -1;
+		}
 	}
 	
 }
