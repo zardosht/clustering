@@ -52,12 +52,15 @@ public class HierarchicalCluster {
 	}
 
 	private void getChildren(HashSet<Item> children) {
+		if(firstChild != null) {
+			firstChild.getChildren(children);
+		} 
+		if(secondChild != null) {
+			secondChild.getChildren(children);
+		}
 		if(item != null) {
 			children.add(item);
-			return;
 		}
-		firstChild.getChildren(children);
-		secondChild.getChildren(children);
 	}
 
 	public Item getItem() {
