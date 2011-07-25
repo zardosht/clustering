@@ -65,13 +65,6 @@ public class AbstractMode {
 			if(method.getName().startsWith("_run")) {
 				return method;
 			}
-			// WHY AREN'T THE F!&?%$§G ANNOTATIONS NOT RECOGNIZED
-//			if (method.getAnnotation(ModeExec.class) != null) {
-//				return method;
-//			}
-//			for(Annotation an : method.getAnnotations()) {
-//				System.out.println(an);
-//			}
 		}
 		return null;
 	}

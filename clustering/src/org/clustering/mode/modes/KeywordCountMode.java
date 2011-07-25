@@ -55,28 +55,6 @@ public class KeywordCountMode extends AbstractMode {
 		}
 		csvWriter.close();
 
-		// int offset = 10;
-		//
-		// int width = biggest + 2 * offset;
-		// int height = highestCount + 2 * offset;
-		// BufferedImage image = new BufferedImage(width, height,
-		// BufferedImage.BITMASK);
-		// Graphics2D g = (Graphics2D) image.getGraphics();
-		// g.setColor(Color.white);
-		// g.fillRect(0, 0, width, height);
-		// g.setColor(Color.black);
-		//
-		// for (int i = 0; i < biggest; i++) {
-		// Integer integer = results.get(i);
-		// if (integer != null) {
-		// g.drawRect(i + offset, highestCount - integer + offset, 0, 0);
-		// }
-		// }
-		//
-		// // g.drawLine(offset, highestCount+offset+5, biggest+offset,
-		// // highestCount+offset+5);
-		//
-		// ImageIO.write(image, "PNG", new File("results/keywordcount.png"));
 	}
 
 }

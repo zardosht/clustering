@@ -42,9 +42,6 @@ public class FindGoodClusterMode extends AbstractMode {
 				}
 			});
 			
-//			System.out.println(list.get(0).getDistance(centroid));
-//			System.out.println(list.get(list.size()-1).getDistance(centroid));
-			
 			int i = 0;
 			String movies = "";
 			String ids ="";
