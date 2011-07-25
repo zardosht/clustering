@@ -18,7 +18,7 @@ import org.clustering.util.VisualisationUtil;
 public class HierarchicalClusteringMode extends AbstractMode {
 
 	public HierarchicalClusteringMode() {
-		super("-hierarchical", "HAC");
+		super("-hierarchical", "Runs a hierarchical clustering and creates a dendrogram of all items:\njava -jar clustering.jar -hierachical");
 	}
 
 	public void _runCreateCluster() throws Exception {
