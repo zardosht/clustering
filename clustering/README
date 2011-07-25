@@ -9,3 +9,5 @@ Das Programm hat folgende Argumente bzw. Modi:
 <filmid> <clusterCount> <outputKeywords>: Gibt für den spezifizierten Film eine Menge von ähnlichen zurück. ClusterCount gibt an, welche vorberechnete Cluster-Ergebnisse verwendet werden sollen. Die clustering is bereits for k=10, 20, und 70 berechnet worden. OutputKeyword gibt an, ob die Keywords zu den Filmen ausgegeben werden ("true" und "false") 
 
 -evaluation: Führt eine Evaluierung über mehrere K (2-200) aus und gibt diese in einer CSV-Datei aus (Jaccard-Distanz und AvgCentroid)
+
+-hierachical: Führt eine Hierarchische Clustering über alle Items aus. Das Ergebnis wird als ein Dendrogram-Bild in /results/hierachical_cluster.png geschrieben. 
